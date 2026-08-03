@@ -5,6 +5,7 @@ Versioned browser assets for embed compatibility experiments.
 ## Assets
 
 - `dist/probe.iife.js`: minimal classic-script loading probe
+- `dist/probe.esm.js`: minimal standalone ES module loading probe
 - `dist/embed-test.iife.js`: React 19 + Mantine 9 external IIFE experiment
 - `dist/embed-test.iife.css`: styles for the external IIFE experiment
 
@@ -22,3 +23,5 @@ https://cdn.jsdelivr.net/gh/zenyr/cdn@<commit>/dist/probe.iife.js
 ```
 
 Pin production consumers to a commit SHA. Do not use `main` for stable reports.
+
+The probe ships in classic IIFE and ESM formats because embed hosts may apply different CSP rules to each. Choose the runtime format only after testing the target host; jsDelivr itself supports both.
