@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; worker-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>CDN IIFE 임베딩 실험</title>
+    <link rel="stylesheet" href="../dist/embed-test.iife.css" />
+  </head>
+  <body>
+    <div id="zenyr-report-root" data-verify-content>
+      <main>
+        <h1>CDN 임베딩 실험</h1>
+        <p>이 문장이 계속 보이면 외부 IIFE가 실행되지 않은 것입니다.</p>
+      </main>
+    </div>
+    <script src="../dist/embed-test.iife.js"></script>
+  </body>
+</html>

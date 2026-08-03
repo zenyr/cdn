@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "sources": ["../src/probe.iife.ts"],
+  "sourcesContent": [
+    "declare global {\n  interface Window {\n    ZenyrCdnProbe?: {\n      loaded: true;\n      version: string;\n      source: string;\n    };\n  }\n}\n\nconst result = {\n  loaded: true as const,\n  version: \"0.1.0\",\n  source: document.currentScript?.getAttribute(\"src\") ?? \"inline\",\n};\n\nwindow.ZenyrCdnProbe = result;\nwindow.dispatchEvent(new CustomEvent(\"zenyr-cdn-probe\", { detail: result }));\n\nfor (const target of document.querySelectorAll<HTMLElement>(\n  \"[data-zenyr-cdn-probe]\",\n)) {\n  target.dataset.status = \"loaded\";\n  target.textContent = `PASS ${result.version}`;\n}\n"
+  ],
+  "mappings": "MAUA,IAAM,EAAS,CACb,OAAQ,GACR,QAAS,QACT,OAAQ,SAAS,eAAe,aAAa,KAAK,GAAK,QACzD,EAEA,OAAO,cAAgB,EACvB,OAAO,cAAc,IAAI,YAAY,kBAAmB,CAAE,OAAQ,CAAO,CAAC,CAAC,EAE3E,QAAW,KAAU,SAAS,iBAC5B,wBACF,EACE,EAAO,QAAQ,OAAS,SACxB,EAAO,YAAc,QAAQ,EAAO",
+  "debugId": "44FC1B7833309C3364756E2164756E21",
+  "names": []
+}

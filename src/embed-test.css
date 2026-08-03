@@ -1,0 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--mantine-color-body, #fff);
+  color: var(--mantine-color-text, #1a1b1e);
+}
+.zenyr-embed-main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
