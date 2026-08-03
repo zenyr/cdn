@@ -30,6 +30,64 @@ kbd,
 samp {
   font-family: var(--font-mono);
 }
+main {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 3rem 1.4rem 7rem;
+}
+h1 {
+  font-size: 1.85rem;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.7rem;
+  font-weight: 600;
+}
+h2 {
+  font-size: 1.2rem;
+  margin: 3rem 0 1rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+}
+h3 {
+  font-size: 1rem;
+  margin: 2rem 0 0.7rem;
+}
+p,
+ul,
+ol,
+blockquote {
+  margin: 0 0 1rem;
+}
+blockquote {
+  padding-left: 1rem;
+  border-left: 3px solid var(--mantine-color-default-border);
+  color: var(--mantine-color-dimmed);
+}
+pre {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: 6px;
+  background: var(--mantine-color-default-hover);
+  overflow-x: auto;
+}
+code {
+  font-size: 0.86em;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+th,
+td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--mantine-color-default-border);
+  text-align: left;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
 .scroll-x {
   overflow-x: auto;
 }
