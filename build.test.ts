@@ -8,6 +8,8 @@ test("build emits expected CDN assets", async () => {
     "dist/probe.esm.js",
     "dist/embed-test.esm.js",
     "dist/embed-test.esm.css",
+    "dist/report-runtime.esm.js",
+    "dist/report-runtime.esm.css",
     "dist/embed-test.iife.js",
     "dist/embed-test.iife.css",
     "dist/fonts.css",
@@ -17,7 +19,7 @@ test("build emits expected CDN assets", async () => {
 });
 
 test("browser assets avoid restricted runtime APIs", async () => {
-  const source = `${await read("dist/probe.iife.js")}\n${await read("dist/probe.esm.js")}\n${await read("dist/embed-test.iife.js")}\n${await read("dist/embed-test.esm.js")}`;
+  const source = `${await read("dist/probe.iife.js")}\n${await read("dist/probe.esm.js")}\n${await read("dist/embed-test.iife.js")}\n${await read("dist/embed-test.esm.js")}\n${await read("dist/report-runtime.esm.js")}`;
   expect(source).not.toMatch(/\beval\s*\(/);
   expect(source).not.toMatch(/\bnew\s+(?:Function|Worker)\b/);
   expect(source).not.toMatch(/\b(?:fetch|createObjectURL)\s*\(/);
@@ -29,6 +31,12 @@ test("local example references built assets", async () => {
   expect(html).toContain("../dist/fonts.css");
   expect(html).toContain("../dist/embed-test.iife.css");
   expect(html).toContain("../dist/embed-test.iife.js");
+});
+
+test("runtime example references hosted runtime assets", async () => {
+  const html = await read("examples/runtime-test.html");
+  expect(html).toContain("../dist/report-runtime.esm.css");
+  expect(html).toContain("../dist/report-runtime.esm.js");
 });
 
 test("font CSS keeps unicode ranges and external WOFF2 assets", async () => {

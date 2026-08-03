@@ -49,6 +49,7 @@ const esm = await Bun.build({
   entrypoints: [
     `${import.meta.dir}/src/probe.esm.ts`,
     `${import.meta.dir}/src/embed-test.esm.tsx`,
+    `${import.meta.dir}/src/report-runtime.esm.ts`,
   ],
   outdir: `${import.meta.dir}/dist`,
   naming: "[name].[ext]",

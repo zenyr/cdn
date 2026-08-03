@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Report runtime test</title>
+    <link rel="stylesheet" href="../dist/fonts.css" />
+    <link rel="stylesheet" href="../dist/report-runtime.esm.css" />
+    <script type="module" src="../dist/report-runtime.esm.js"></script>
+  </head>
+  <body>
+    <div id="root" data-verify-content>
+      <main><h1>Runtime fallback</h1></main>
+    </div>
+    <script>
+      const mount = (R) => {
+        const { React, createRoot, Mantine: M } = R;
+        const App = () =>
+          React.createElement(
+            M.MantineProvider,
+            { defaultColorScheme: "auto" },
+            React.createElement(
+              M.Button,
+              {
+                id: "runtime-button",
+                onClick: (event) => (event.currentTarget.textContent = "PASS"),
+              },
+              "Runtime ready",
+            ),
+          );
+        createRoot(document.getElementById("root")).render(
+          React.createElement(App),
+        );
+      };
+      window.ZenyrReportRuntime
+        ? mount(window.ZenyrReportRuntime)
+        : addEventListener(
+            "zenyr-report-runtime-ready",
+            ({ detail }) => mount(detail),
+            { once: true },
+          );
+    </script>
+  </body>
+</html>

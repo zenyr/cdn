@@ -12,6 +12,8 @@ Versioned browser assets for embed compatibility experiments.
 - `dist/embed-test.esm.css`: styles for the ESM experiment
 - `dist/fonts.css`: IBM Plex Sans KR 400/500/600/700 and IBM Plex Mono 400/500 declarations
 - `dist/fonts/`: WOFF2 files split by Unicode range for on-demand browser loading
+- `dist/report-runtime.esm.js`: shared React/Mantine runtime for prebaked reports
+- `dist/report-runtime.esm.css`: Mantine and report baseline styles
 
 Build with Bun:
 
