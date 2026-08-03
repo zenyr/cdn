@@ -1,3 +1,17 @@
+:root {
+  --font-sans:
+    "IBM Plex Sans KR", -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", sans-serif;
+  --font-mono:
+    "IBM Plex Mono", "IBM Plex Sans KR", ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+}
+:root,
+html[data-mantine-color-scheme] {
+  --mantine-font-family: var(--font-sans);
+  --mantine-font-family-headings: var(--font-sans);
+  --mantine-font-family-monospace: var(--font-mono);
+}
 * {
   box-sizing: border-box;
 }
@@ -5,6 +19,13 @@ body {
   margin: 0;
   background: var(--mantine-color-body, #fff);
   color: var(--mantine-color-text, #1a1b1e);
+  font-family: var(--font-sans);
+}
+code,
+pre,
+kbd,
+samp {
+  font-family: var(--font-mono);
 }
 .zenyr-embed-main {
   max-width: 760px;

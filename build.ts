@@ -1,6 +1,35 @@
-import { rm } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 
 await rm(`${import.meta.dir}/dist`, { recursive: true, force: true });
+
+const fontSources = [
+  {
+    package: "@fontsource/ibm-plex-sans-kr",
+    files: ["400.css", "500.css", "600.css", "700.css"],
+  },
+  {
+    package: "@fontsource/ibm-plex-mono",
+    files: ["latin-400.css", "latin-500.css"],
+  },
+];
+let fontCss = "";
+const fontFiles = new Map<string, string>();
+for (const font of fontSources) {
+  for (const file of font.files) {
+    const source = await Bun.file(
+      `${import.meta.dir}/node_modules/${font.package}/${file}`,
+    ).text();
+    fontCss += source
+      .replace(/,\s*url\([^)]*\.woff\)\s*format\(["']woff["']\)/g, "")
+      .replace(/url\(\.\/files\/([^)]*\.woff2)\)/g, (_, name) => {
+        fontFiles.set(
+          name,
+          `${import.meta.dir}/node_modules/${font.package}/files/${name}`,
+        );
+        return `url(./fonts/${name})`;
+      });
+  }
+}
 
 const iife = await Bun.build({
   entrypoints: [
@@ -41,3 +70,12 @@ for (const result of [iife, esm]) {
     );
   }
 }
+
+await mkdir(`${import.meta.dir}/dist/fonts`, { recursive: true });
+await Bun.write(`${import.meta.dir}/dist/fonts.css`, fontCss);
+for (const [name, source] of fontFiles) {
+  await Bun.write(`${import.meta.dir}/dist/fonts/${name}`, Bun.file(source));
+}
+console.log(
+  `dist/fonts.css ${fontCss.length} B · ${fontFiles.size} WOFF2 files`,
+);

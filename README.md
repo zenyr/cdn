@@ -10,6 +10,8 @@ Versioned browser assets for embed compatibility experiments.
 - `dist/embed-test.iife.css`: styles for the external IIFE experiment
 - `dist/embed-test.esm.js`: same React/Mantine experiment as standalone ESM
 - `dist/embed-test.esm.css`: styles for the ESM experiment
+- `dist/fonts.css`: IBM Plex Sans KR 400/500/600/700 and IBM Plex Mono 400/500 declarations
+- `dist/fonts/`: WOFF2 files split by Unicode range for on-demand browser loading
 
 Build with Bun:
 
@@ -27,3 +29,5 @@ https://cdn.jsdelivr.net/gh/zenyr/cdn@<commit>/dist/probe.iife.js
 Pin production consumers to a commit SHA. Do not use `main` for stable reports.
 
 The probe ships in classic IIFE and ESM formats because embed hosts may apply different CSP rules to each. Choose the runtime format only after testing the target host; jsDelivr itself supports both.
+
+Load `fonts.css` before the component stylesheet. Sans KR is the default UI font. The monospace stack uses IBM Plex Mono where glyphs exist and falls back to IBM Plex Sans KR for Korean.

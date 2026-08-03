@@ -10,6 +10,7 @@ test("build emits expected CDN assets", async () => {
     "dist/embed-test.esm.css",
     "dist/embed-test.iife.js",
     "dist/embed-test.iife.css",
+    "dist/fonts.css",
   ]) {
     expect(await Bun.file(`${import.meta.dir}/${path}`).exists()).toBe(true);
   }
@@ -25,6 +26,24 @@ test("browser assets avoid restricted runtime APIs", async () => {
 
 test("local example references built assets", async () => {
   const html = await read("examples/embed-test.html");
+  expect(html).toContain("../dist/fonts.css");
   expect(html).toContain("../dist/embed-test.iife.css");
   expect(html).toContain("../dist/embed-test.iife.js");
+});
+
+test("font CSS keeps unicode ranges and external WOFF2 assets", async () => {
+  const css = await read("dist/fonts.css");
+  expect(css).toContain("unicode-range:");
+  expect(css).toContain("url(./fonts/");
+  expect(css).not.toContain("format('woff')");
+  expect(
+    await Bun.file(
+      `${import.meta.dir}/dist/fonts/ibm-plex-sans-kr-0-400-normal.woff2`,
+    ).exists(),
+  ).toBe(true);
+  expect(
+    await Bun.file(
+      `${import.meta.dir}/dist/fonts/ibm-plex-mono-latin-500-normal.woff2`,
+    ).exists(),
+  ).toBe(true);
 });
