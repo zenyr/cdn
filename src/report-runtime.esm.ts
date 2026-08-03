@@ -224,7 +224,7 @@ const defaultComponents: ComponentRegistry = { ThemeToggle };
 
 function ReportDocument({ content }: { content: React.ReactNode }) {
   React.useEffect(() => {
-    window.dispatchEvent(new CustomEvent("zenyr-report-rendered"));
+    window.dispatchEvent(new CustomEvent("zenyr:rendered"));
   }, []);
   return React.createElement("main", null, content);
 }
@@ -300,11 +300,10 @@ const runtime = {
 
 declare global {
   interface Window {
-    ZenyrReportRuntime: typeof runtime;
+    Zenyr?: { report?: typeof runtime };
   }
 }
 
-window.ZenyrReportRuntime = runtime;
-window.dispatchEvent(
-  new CustomEvent("zenyr-report-runtime-ready", { detail: runtime }),
-);
+const namespace = (window.Zenyr ??= {});
+namespace.report = runtime;
+window.dispatchEvent(new CustomEvent("zenyr:ready", { detail: runtime }));

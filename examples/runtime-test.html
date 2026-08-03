@@ -32,13 +32,11 @@
           React.createElement(App),
         );
       };
-      window.ZenyrReportRuntime
-        ? mount(window.ZenyrReportRuntime)
-        : addEventListener(
-            "zenyr-report-runtime-ready",
-            ({ detail }) => mount(detail),
-            { once: true },
-          );
+      globalThis.Zenyr?.report
+        ? mount(globalThis.Zenyr.report)
+        : addEventListener("zenyr:ready", ({ detail }) => mount(detail), {
+            once: true,
+          });
     </script>
   </body>
 </html>
