@@ -163,12 +163,38 @@ const renderNode = (
         "li",
         node.checked == null ? {} : { "data-checked": node.checked },
       );
-    case "table":
+    case "table": {
+      const [head, ...body] = node.children ?? [];
+      const row = (item: MdxNode, Cell: "th" | "td", rowKey: React.Key) =>
+        React.createElement(
+          "tr",
+          { key: rowKey },
+          item.children?.map((cell, cellKey) =>
+            React.createElement(
+              Cell,
+              { key: cellKey },
+              cell.children?.map((child, childKey) =>
+                renderNode(child, components, childKey),
+              ),
+            ),
+          ),
+        );
       return React.createElement(
         "div",
         { key, className: "scroll-x" },
-        element("table"),
+        React.createElement(
+          "table",
+          null,
+          head && React.createElement("thead", null, row(head, "th", 0)),
+          body.length > 0 &&
+            React.createElement(
+              "tbody",
+              null,
+              body.map((item, index) => row(item, "td", index)),
+            ),
+        ),
       );
+    }
     case "tableRow":
       return element("tr");
     case "tableCell":
@@ -196,6 +222,13 @@ const renderNode = (
 
 const defaultComponents: ComponentRegistry = { ThemeToggle };
 
+function ReportDocument({ content }: { content: React.ReactNode }) {
+  React.useEffect(() => {
+    window.dispatchEvent(new CustomEvent("zenyr-report-rendered"));
+  }, []);
+  return React.createElement("main", null, content);
+}
+
 const mountDocument = ({
   root,
   source,
@@ -218,15 +251,10 @@ const mountDocument = ({
     React.createElement(
       MantineProvider,
       { defaultColorScheme: "auto" },
-      React.createElement(
-        "main",
-        null,
-        renderNode(tree, { ...defaultComponents, ...components }),
-      ),
+      React.createElement(ReportDocument, {
+        content: renderNode(tree, { ...defaultComponents, ...components }),
+      }),
     ),
-  );
-  requestAnimationFrame(() =>
-    window.dispatchEvent(new CustomEvent("zenyr-report-rendered")),
   );
 };
 
