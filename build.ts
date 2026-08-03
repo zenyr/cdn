@@ -17,13 +17,17 @@ const iife = await Bun.build({
 });
 
 const esm = await Bun.build({
-  entrypoints: [`${import.meta.dir}/src/probe.esm.ts`],
+  entrypoints: [
+    `${import.meta.dir}/src/probe.esm.ts`,
+    `${import.meta.dir}/src/embed-test.esm.tsx`,
+  ],
   outdir: `${import.meta.dir}/dist`,
   naming: "[name].[ext]",
   format: "esm",
   target: "browser",
   minify: true,
   sourcemap: "external",
+  define: { "process.env.NODE_ENV": '"production"' },
 });
 
 for (const result of [iife, esm]) {

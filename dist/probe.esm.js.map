@@ -4,7 +4,7 @@
   "sourcesContent": [
     "export const version = \"0.1.0\";\n\nwindow.dispatchEvent(\n  new CustomEvent(\"zenyr-cdn-esm-probe\", {\n    detail: { loaded: true, version },\n  }),\n);\n"
   ],
-  "mappings": "AAAO,IAAM,EAAU,QAEvB,OAAO,cACL,IAAI,YAAY,sBAAuB,CACrC,OAAQ,CAAE,OAAQ,GAAM,QAJL,OAIa,CAClC,CAAC,CACH",
-  "debugId": "6F965341C4A0386964756E2164756E21",
+  "mappings": "0vBAAO,IAAM,EAAU,QAEvB,OAAO,cACL,IAAI,YAAY,sBAAuB,CACrC,OAAQ,CAAE,OAAQ,GAAM,QAJL,OAIa,CAClC,CAAC,CACH",
+  "debugId": "EFA1F17992B6932D64756E2164756E21",
   "names": []
 }

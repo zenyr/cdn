@@ -8,6 +8,8 @@ Versioned browser assets for embed compatibility experiments.
 - `dist/probe.esm.js`: minimal standalone ES module loading probe
 - `dist/embed-test.iife.js`: React 19 + Mantine 9 external IIFE experiment
 - `dist/embed-test.iife.css`: styles for the external IIFE experiment
+- `dist/embed-test.esm.js`: same React/Mantine experiment as standalone ESM
+- `dist/embed-test.esm.css`: styles for the ESM experiment
 
 Build with Bun:
 

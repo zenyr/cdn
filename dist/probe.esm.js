@@ -1,3 +1,3 @@
-var e="0.1.0";window.dispatchEvent(new CustomEvent("zenyr-cdn-esm-probe",{detail:{loaded:!0,version:"0.1.0"}}));export{e as version};
+var a=Object.create;var{getPrototypeOf:c,defineProperty:r,getOwnPropertyNames:p}=Object;var w=Object.prototype.hasOwnProperty;function l(e){return this[e]}var m,u,h=(e,n,o)=>{var s=e!=null&&typeof e==="object";if(s){var i=n?m??=new WeakMap:u??=new WeakMap,v=i.get(e);if(v)return v}o=e!=null?a(c(e)):{};let t=n||!e||!e.__esModule?r(o,"default",{value:e,enumerable:!0}):o;if(e&&typeof e==="object"||typeof e==="function"){for(let d of p(e))if(!w.call(t,d))r(t,d,{get:l.bind(e,d),enumerable:!0})}if(s)i.set(e,t);return t};var x=(e,n)=>()=>(n||e((n={exports:{}}).exports,n),n.exports);var E=(e)=>e;function b(e,n){this[e]=E.bind(null,n)}var y=(e,n)=>{for(var o in n)r(e,o,{get:n[o],enumerable:!0,configurable:!0,set:b.bind(n,o)})};var z=(e,n)=>()=>(e&&(n=e(e=0)),n);var f="0.1.0";window.dispatchEvent(new CustomEvent("zenyr-cdn-esm-probe",{detail:{loaded:!0,version:"0.1.0"}}));export{f as version};
 
-//# debugId=6F965341C4A0386964756E2164756E21
+//# debugId=EFA1F17992B6932D64756E2164756E21
