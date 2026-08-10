@@ -34,6 +34,7 @@ main {
   max-width: 46rem;
   margin: 0 auto;
   padding: 3rem 1.4rem 7rem;
+  line-height: 1.65;
 }
 h1 {
   font-size: 1.85rem;
@@ -90,4 +91,42 @@ img {
 }
 .scroll-x {
   overflow-x: auto;
+}
+
+@media print {
+  :root,
+  html[data-mantine-color-scheme] {
+    color-scheme: light;
+    --mantine-color-body: #fff;
+    --mantine-color-text: #000;
+    --mantine-color-dimmed: #444;
+    --mantine-color-default-hover: #f3f3f3;
+    --mantine-color-default-border: #bbb;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .report-theme-control {
+    display: none !important;
+  }
+  main.report-document {
+    max-width: none;
+    padding: 0;
+  }
+  .scroll-x {
+    overflow: visible;
+  }
+  tr,
+  figure,
+  .mantine-Card-root,
+  .mantine-Paper-root {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .mantine-Card-root,
+  .mantine-Paper-root {
+    background: #fff !important;
+    color: #000 !important;
+  }
 }

@@ -38,6 +38,11 @@ import {
 } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "./report-runtime.css";
+import {
+  tableCellProps,
+  themeToggleProps,
+  type TableAlignment,
+} from "./report-runtime-semantics";
 
 type MdxNode = {
   type: string;
@@ -51,6 +56,7 @@ type MdxNode = {
   lang?: string | null;
   name?: string | null;
   attributes?: { type: string; name?: string; value?: unknown }[];
+  align?: TableAlignment[];
   children?: MdxNode[];
 };
 
@@ -66,12 +72,17 @@ function ThemeToggle() {
   const { setColorScheme } = useMantineColorScheme();
   const scheme = useComputedColorScheme("light");
   const dark = scheme === "dark";
+  const toggle = themeToggleProps(dark);
   return React.createElement(
     Group,
-    { justify: "flex-end", mb: "md" },
+    {
+      className: "report-theme-control",
+      justify: "flex-end",
+      mb: "md",
+    },
     React.createElement(
       Tooltip,
-      { label: dark ? "라이트 모드" : "다크 모드" },
+      { label: toggle.label },
       React.createElement(
         ActionIcon,
         {
@@ -80,7 +91,8 @@ function ThemeToggle() {
           radius: "xl",
           size: "lg",
           onClick: () => setColorScheme(dark ? "light" : "dark"),
-          "aria-label": "색상 모드 전환",
+          "aria-label": toggle["aria-label"],
+          "aria-pressed": toggle["aria-pressed"],
         },
         dark ? "☀" : "☾",
       ),
@@ -172,7 +184,10 @@ const renderNode = (
           item.children?.map((cell, cellKey) =>
             React.createElement(
               Cell,
-              { key: cellKey },
+              {
+                key: cellKey,
+                ...tableCellProps(node.align?.[cellKey], Cell === "th"),
+              },
               cell.children?.map((child, childKey) =>
                 renderNode(child, components, childKey),
               ),
@@ -226,7 +241,11 @@ function ReportDocument({ content }: { content: React.ReactNode }) {
   React.useEffect(() => {
     window.dispatchEvent(new CustomEvent("zenyr:rendered"));
   }, []);
-  return React.createElement("main", null, content);
+  return React.createElement(
+    "main",
+    { className: "report-document" },
+    content,
+  );
 }
 
 const mountDocument = ({
