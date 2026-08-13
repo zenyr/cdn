@@ -22,6 +22,21 @@ html[data-mantine-color-scheme="dark"] {
 * {
   box-sizing: border-box;
 }
+html {
+  scroll-behavior: smooth;
+}
+.report-target-highlight {
+  position: absolute;
+  z-index: 2147483647;
+  border-radius: 0.3em;
+  pointer-events: none;
+  background: var(--mantine-color-yellow-light);
+  animation: report-target-highlight 2.4s ease-out forwards;
+}
+@keyframes report-target-highlight {
+  0%, 35% { opacity: 0.72; }
+  100% { opacity: 0; }
+}
 body {
   margin: 0;
   background: var(--mantine-color-body, #fff);
@@ -157,6 +172,8 @@ img {
   .report-svg-canvas { margin-inline: -0.25rem; width: calc(100% + 0.5rem); }
 }
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .report-target-highlight { animation: none; opacity: 0.45; }
   .report-svg-canvas *, .report-license-footer * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

@@ -468,9 +468,50 @@ const mergeLicenses = (documentLicenses: readonly DocumentLicense[], diagramDesi
   ).values()];
 };
 
+const targetHighlightMs = 2400;
+let targetHighlightTimer: number | undefined;
+const highlightRenderedTarget = () => {
+  const target = location.hash && document.querySelector<HTMLElement>(":target");
+  if (!target) return;
+  const expected = location.hash;
+  document.querySelector(".report-target-highlight")?.remove();
+  window.clearTimeout(targetHighlightTimer);
+  target.scrollIntoView({
+    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    block: "center",
+  });
+  const bounds = target.getBoundingClientRect();
+  const highlight = document.createElement("div");
+  highlight.className = "report-target-highlight";
+  Object.assign(highlight.style, {
+    top: `${bounds.top + scrollY - 3}px`,
+    left: `${bounds.left + scrollX - 5}px`,
+    width: `${bounds.width + 10}px`,
+    height: `${bounds.height + 6}px`,
+  });
+  document.body.append(highlight);
+  targetHighlightTimer = window.setTimeout(() => {
+    highlight.remove();
+    if (location.hash === expected && document.querySelector(":target") === target) {
+      try {
+        history.replaceState(history.state, "", `${location.pathname}${location.search}`);
+      } catch {
+        // Some file:// and sandboxed hosts reject History API writes. Retain the hash safely.
+      }
+    }
+  }, targetHighlightMs);
+};
+
 function ReportDocument({ content, appendLicenseFooter, licenses }: { content: React.ReactNode; appendLicenseFooter: boolean; licenses: readonly DocumentLicense[] }) {
   React.useEffect(() => {
     window.dispatchEvent(new CustomEvent("zenyr:rendered"));
+    highlightRenderedTarget();
+    window.addEventListener("hashchange", highlightRenderedTarget);
+    return () => {
+      window.removeEventListener("hashchange", highlightRenderedTarget);
+      window.clearTimeout(targetHighlightTimer);
+      document.querySelector(".report-target-highlight")?.remove();
+    };
   }, []);
   return React.createElement(
     DocumentLicensesContext.Provider,

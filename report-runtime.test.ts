@@ -72,6 +72,22 @@ test("dimmed text meets WCAG AA contrast in light and dark themes", async () => 
   expect(contrast(dimmed("dark")!, "#242424")).toBeGreaterThanOrEqual(4.5);
 });
 
+test("hash targets scroll smoothly, highlight without changing target styles, and clear safely", async () => {
+  const css = await read("src/report-runtime.css");
+  const runtime = await read("src/report-runtime.esm.ts");
+  expect(css).toMatch(/html\s*{[^}]*scroll-behavior:\s*smooth;/s);
+  expect(css).toMatch(/\.report-target-highlight\s*{[^}]*background:\s*var\(--mantine-color-yellow-light\);[^}]*animation:\s*report-target-highlight 2\.4s ease-out forwards;/s);
+  expect(css).not.toMatch(/:target\s*(?:::before|::after)?\s*{/);
+  expect(css).toMatch(/prefers-reduced-motion:\s*reduce[\s\S]*html\s*{\s*scroll-behavior:\s*auto;/s);
+  expect(runtime).toContain('document.querySelector<HTMLElement>(":target")');
+  expect(runtime).toContain('target.scrollIntoView({');
+  expect(runtime).toContain('highlight.className = "report-target-highlight"');
+  expect(runtime).toContain('history.replaceState(history.state, "", `${location.pathname}${location.search}`)');
+  expect(runtime).toMatch(/try \{[\s\S]*history\.replaceState[\s\S]*\} catch \{/);
+  expect(runtime).toContain('window.addEventListener("hashchange", highlightRenderedTarget)');
+  expect(runtime).toContain('window.removeEventListener("hashchange", highlightRenderedTarget)');
+});
+
 test("report CSS keeps tables compact and inline code subtly distinct", async () => {
   const css = await read("src/report-runtime.css");
   expect(css).toMatch(/table\s*{[^}]*font-size:\s*0\.9rem;[^}]*line-height:\s*1\.55;/s);
