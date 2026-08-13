@@ -1,0 +1,19 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../dist/report-runtime.esm.css"><script type="module" src="../dist/report-runtime.esm.js"></script></head>
+<body><div id="root"></div><script id="source" type="text/plain"><SvgFigure id="namespace-contract" label="Namespace contract" description="A visible rectangle">
+```svg
+<svg viewBox="0 0 100 40"><defs><clipPath id="clip"><rect width="80" height="30" /></clipPath></defs><rect id="shape" width="80" height="30" clip-path="url(#clip)" /></svg>
+```
+</SvgFigure></script>
+<script>
+addEventListener("zenyr:ready", ({ detail }) => detail.mountDocument({ root: "#root", source: "#source" }), { once: true });
+addEventListener("zenyr:rendered", () => requestAnimationFrame(() => {
+  const svg = document.querySelector("svg");
+  const shape = document.querySelector("#namespace-contract-shape");
+  document.body.dataset.svgNamespace = svg?.namespaceURI ?? "null";
+  document.body.dataset.shapeNamespace = shape?.namespaceURI ?? "null";
+  document.body.dataset.shapeWidth = String(shape?.getBBox().width ?? 0);
+  document.body.dataset.a11y = svg?.getAttribute("aria-labelledby") ?? "";
+  document.body.dataset.clip = shape?.getAttribute("clip-path") ?? "";
+}));
+</script></body></html>

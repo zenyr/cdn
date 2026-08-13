@@ -70,6 +70,10 @@ test("static SVG figure contract is accessible, sanitized and dependency-free", 
   const runtime = await read("src/report-runtime.esm.ts");
   expect(runtime).toContain("function SvgFigure");
   expect(runtime).toContain("new DOMParser()");
+  expect(runtime).toContain("document.createElementNS(svgNamespace, element.localName)");
+  expect(runtime).toContain('document.createElementNS(svgNamespace, "title")');
+  expect(runtime).toContain("return safeSvg;");
+  expect(runtime).not.toContain("document.importNode(svg, true)");
   expect(runtime).toContain("contains an external reference");
   expect(runtime).toContain('"marker-start", "marker-mid", "marker-end"');
   expect(runtime).toContain("defaultComponents: ComponentRegistry = { ThemeToggle, SvgFigure, OssLicenseFooter }");
@@ -122,4 +126,23 @@ test("document provenance is opt-in, string-only, merged and deduplicated", asyn
   expect(readme).toContain('source="diagram-design"');
   expect(readme).toContain("ordinary hand-authored SVG must not produce a false notice");
   expect(readme).toContain("every field is inert text");
+});
+
+
+test("SVG figures retain namespaces and geometry in a real browser", async () => {
+  const chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+  if (!(await Bun.file(chrome).exists())) return;
+  const page = new URL("./examples/svg-namespace-test.html", import.meta.url).href;
+  const process = Bun.spawn([
+    chrome, "--headless", "--disable-gpu", "--no-sandbox",
+    "--allow-file-access-from-files", "--run-all-compositor-stages-before-draw",
+    "--virtual-time-budget=3000", "--dump-dom", page,
+  ], { stdout: "pipe", stderr: "pipe" });
+  const output = await new Response(process.stdout).text();
+  expect(await process.exited).toBe(0);
+  expect(output).toContain('data-svg-namespace="http://www.w3.org/2000/svg"');
+  expect(output).toContain('data-shape-namespace="http://www.w3.org/2000/svg"');
+  expect(output).toContain('data-shape-width="80"');
+  expect(output).toContain('data-a11y="namespace-contract-title namespace-contract-description"');
+  expect(output).toContain('data-clip="url(#namespace-contract-clip)"');
 });

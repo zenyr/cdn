@@ -144,8 +144,31 @@ const svgAttributes = new Set([
   "patternContentUnits", "patternTransform", "markerWidth", "markerHeight",
   "markerUnits", "refX", "refY", "orient", "preserveAspectRatio", "clip-path",
   "marker-start", "marker-mid", "marker-end", "mask", "role", "aria-hidden", "focusable", "href", "xlink:href",
+  "xmlns", "xmlns:xlink",
 ]);
 const fragmentReference = /url\(\s*(['"]?)#([^)'"\s]+)\1\s*\)/g;
+const svgNamespace = "http://www.w3.org/2000/svg";
+const xlinkNamespace = "http://www.w3.org/1999/xlink";
+
+const constructSvg = (source: Element): SVGSVGElement => {
+  const construct = (element: Element): Element => {
+    const result = document.createElementNS(svgNamespace, element.localName);
+    for (const attribute of [...element.attributes]) {
+      if (attribute.name === "xmlns" || attribute.name === "xmlns:xlink") continue;
+      if (attribute.name === "xlink:href") {
+        result.setAttributeNS(xlinkNamespace, attribute.name, attribute.value);
+      } else {
+        result.setAttribute(attribute.name, attribute.value);
+      }
+    }
+    for (const child of [...element.childNodes]) {
+      if (child.nodeType === Node.ELEMENT_NODE) result.append(construct(child as Element));
+      else if (child.nodeType === Node.TEXT_NODE) result.append(document.createTextNode(child.textContent ?? ""));
+    }
+    return result;
+  };
+  return construct(source) as SVGSVGElement;
+};
 
 const prepareSvg = ({ id, label, description, source }: SvgFigureProps & { source: string }) => {
   const a11y = svgFigureA11y(id, label, description);
@@ -160,6 +183,10 @@ const prepareSvg = ({ id, label, description, source }: SvgFigureProps & { sourc
       const name = attribute.name;
       if (name.startsWith("on") || !svgAttributes.has(name)) {
         throw new Error(`SvgFigure ${id} contains unsupported attribute ${name}`);
+      }
+      if ((name === "xmlns" && attribute.value !== svgNamespace) ||
+        (name === "xmlns:xlink" && attribute.value !== xlinkNamespace)) {
+        throw new Error(`SvgFigure ${id} contains an invalid namespace declaration`);
       }
       if ((name === "href" || name === "xlink:href") && !attribute.value.startsWith("#")) {
         throw new Error(`SvgFigure ${id} contains an external reference`);
@@ -198,17 +225,18 @@ const prepareSvg = ({ id, label, description, source }: SvgFigureProps & { sourc
   svg.setAttribute("role", a11y.role);
   svg.setAttribute("aria-labelledby", a11y["aria-labelledby"]);
   svg.setAttribute("focusable", "false");
-  const title = parsed.createElementNS("http://www.w3.org/2000/svg", "title");
+  const safeSvg = constructSvg(svg);
+  const title = document.createElementNS(svgNamespace, "title");
   title.id = `${id}-title`;
   title.textContent = label;
-  svg.prepend(title);
+  safeSvg.prepend(title);
   if (description) {
-    const desc = parsed.createElementNS("http://www.w3.org/2000/svg", "desc");
+    const desc = document.createElementNS(svgNamespace, "desc");
     desc.id = `${id}-description`;
     desc.textContent = description;
     title.after(desc);
   }
-  return document.importNode(svg, true) as unknown as SVGSVGElement;
+  return safeSvg;
 };
 
 function SvgFigure(props: SvgFigureProps) {
