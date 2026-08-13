@@ -12,6 +12,13 @@ html[data-mantine-color-scheme] {
   --mantine-font-family-headings: var(--font-sans);
   --mantine-font-family-monospace: var(--font-mono);
 }
+/* WCAG 2.x contrast against the theme body: light 4.81:1, dark 4.99:1. */
+html[data-mantine-color-scheme="light"] {
+  --mantine-color-dimmed: #6b737b;
+}
+html[data-mantine-color-scheme="dark"] {
+  --mantine-color-dimmed: #929292;
+}
 * {
   box-sizing: border-box;
 }

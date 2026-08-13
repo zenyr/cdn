@@ -51,6 +51,27 @@ test("report CSS sets relaxed reading rhythm and a conservative print baseline",
 });
 
 
+
+test("dimmed text meets WCAG AA contrast in light and dark themes", async () => {
+  const css = await read("src/report-runtime.css");
+  const dimmed = (scheme: "light" | "dark") =>
+    css.match(new RegExp(`html\\[data-mantine-color-scheme="${scheme}"\\]\\s*\\{[^}]*--mantine-color-dimmed:\\s*(#[0-9a-f]{6})`, "i"))?.[1];
+  const luminance = (hex: string) => {
+    const channels = hex.slice(1).match(/../g)!.map((part) => parseInt(part, 16) / 255)
+      .map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+  };
+  const contrast = (foreground: string, background: string) => {
+    const [lighter, darker] = [luminance(foreground), luminance(background)].sort((a, b) => b - a);
+    return (lighter + 0.05) / (darker + 0.05);
+  };
+
+  expect(dimmed("light")).toBe("#6b737b");
+  expect(dimmed("dark")).toBe("#929292");
+  expect(contrast(dimmed("light")!, "#ffffff")).toBeGreaterThanOrEqual(4.5);
+  expect(contrast(dimmed("dark")!, "#242424")).toBeGreaterThanOrEqual(4.5);
+});
+
 test("report CSS keeps tables compact and inline code subtly distinct", async () => {
   const css = await read("src/report-runtime.css");
   expect(css).toMatch(/table\s*{[^}]*font-size:\s*0\.9rem;[^}]*line-height:\s*1\.55;/s);
