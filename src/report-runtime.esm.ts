@@ -427,12 +427,18 @@ const normalizeDocumentLicenses = (items: readonly DocumentLicense[]): DocumentL
   });
   return [...new Map(normalized.map((item) => [`${item.name}\0${item.version}\0${item.license}\0${item.projectUrl}`, item])).values()];
 };
-const mergeLicenses = (documentLicenses: readonly DocumentLicense[], diagramDesign: boolean) =>
-  normalizeDocumentLicenses([
-    ...ossLicenses,
+const mergeLicenses = (documentLicenses: readonly DocumentLicense[], diagramDesign: boolean) => {
+  const declared = normalizeDocumentLicenses([
     ...(diagramDesign ? [diagramDesignLicense] : []),
     ...documentLicenses,
   ]);
+  return [...new Map(
+    [...ossLicenses, ...declared].map((item) => [
+      `${item.name}\0${item.version}\0${item.license}\0${item.projectUrl}`,
+      item,
+    ]),
+  ).values()];
+};
 
 function ReportDocument({ content, appendLicenseFooter, licenses }: { content: React.ReactNode; appendLicenseFooter: boolean; licenses: readonly DocumentLicense[] }) {
   React.useEffect(() => {
