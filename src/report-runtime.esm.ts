@@ -143,7 +143,7 @@ const svgAttributes = new Set([
   "stop-color", "stop-opacity", "gradientUnits", "gradientTransform", "patternUnits",
   "patternContentUnits", "patternTransform", "markerWidth", "markerHeight",
   "markerUnits", "refX", "refY", "orient", "preserveAspectRatio", "clip-path",
-  "mask", "role", "aria-hidden", "focusable", "href", "xlink:href",
+  "marker-start", "marker-mid", "marker-end", "mask", "role", "aria-hidden", "focusable", "href", "xlink:href",
 ]);
 const fragmentReference = /url\(\s*(['"]?)#([^)'"\s]+)\1\s*\)/g;
 

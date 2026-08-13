@@ -62,6 +62,7 @@ test("static SVG figure contract is accessible, sanitized and dependency-free", 
   expect(runtime).toContain("function SvgFigure");
   expect(runtime).toContain("new DOMParser()");
   expect(runtime).toContain("contains an external reference");
+  expect(runtime).toContain('"marker-start", "marker-mid", "marker-end"');
   expect(runtime).toContain("defaultComponents: ComponentRegistry = { ThemeToggle, SvgFigure, OssLicenseFooter }");
   expect(runtime).not.toMatch(/from ["']mermaid["']/);
 });
