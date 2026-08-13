@@ -93,6 +93,64 @@ img {
   overflow-x: auto;
 }
 
+
+
+.report-svg-figure {
+  margin: 1.75rem 0;
+}
+.report-svg-canvas {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--mantine-color-default-border);
+  border-radius: 8px;
+  padding: clamp(0.65rem, 2vw, 1.25rem);
+  background: var(--mantine-color-body, #fff);
+}
+.report-svg-canvas svg {
+  display: block;
+  width: 100%;
+  min-width: 18rem;
+  height: auto;
+  max-height: min(70vh, 50rem);
+}
+.report-svg-figure figcaption {
+  margin-top: 0.6rem;
+  color: var(--mantine-color-dimmed);
+  font-size: 0.9rem;
+  text-align: center;
+}
+.report-license-footer {
+  margin-top: 5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mantine-color-default-border);
+  color: var(--mantine-color-dimmed);
+  font-size: 0.78rem;
+}
+.report-license-title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+.report-license-list {
+  padding: 0 0.75rem 0 1.2rem;
+  font-size: 0.78rem;
+}
+.report-license-scope {
+  max-width: 42rem;
+  margin-top: 0.75rem;
+}
+@media (max-width: 32rem) {
+  main { padding-inline: 1rem; }
+  .report-svg-canvas { margin-inline: -0.25rem; width: calc(100% + 0.5rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .report-svg-canvas *, .report-license-footer * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 @media print {
   :root,
   html[data-mantine-color-scheme] {

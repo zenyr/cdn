@@ -16,3 +16,14 @@ export const themeToggleProps = (dark: boolean) => {
     "aria-pressed": dark,
   };
 };
+
+export const svgFigureA11y = (id: string, label: string, description?: string) => {
+  if (!/^[A-Za-z][A-Za-z0-9_-]*$/.test(id)) {
+    throw new Error("SvgFigure id must start with a letter and contain only letters, numbers, _ or -");
+  }
+  if (!label.trim()) throw new Error("SvgFigure label is required");
+  return {
+    role: "img" as const,
+    "aria-labelledby": `${id}-title${description ? ` ${id}-description` : ""}`,
+  };
+};

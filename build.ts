@@ -1,4 +1,5 @@
 import { mkdir, rm } from "node:fs/promises";
+import "./generate-oss-licenses";
 
 await rm(`${import.meta.dir}/dist`, { recursive: true, force: true });
 
