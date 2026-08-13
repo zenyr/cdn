@@ -51,6 +51,15 @@ test("report CSS sets relaxed reading rhythm and a conservative print baseline",
 });
 
 
+test("report CSS keeps tables compact and inline code subtly distinct", async () => {
+  const css = await read("src/report-runtime.css");
+  expect(css).toMatch(/table\s*{[^}]*font-size:\s*0\.9rem;[^}]*line-height:\s*1\.55;/s);
+  expect(css).toMatch(
+    /code:not\(pre code\)\s*{[^}]*padding:\s*0\.08em 0\.28em;[^}]*border-radius:\s*0\.25em;[^}]*background:\s*color-mix\(in srgb, currentColor 6%, transparent\);/s,
+  );
+  expect(css).not.toMatch(/(?:^|[,\s])pre code\s*{/m);
+});
+
 test("static SVG figure contract is accessible, sanitized and dependency-free", async () => {
   expect(svgFigureA11y("request-path", "Request path", "Request traverses edge")).toEqual({
     role: "img",

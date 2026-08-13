@@ -74,10 +74,17 @@ pre {
 code {
   font-size: 0.86em;
 }
+code:not(pre code) {
+  padding: 0.08em 0.28em;
+  border-radius: 0.25em;
+  background: color-mix(in srgb, currentColor 6%, transparent);
+}
 table {
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 th,
 td {
