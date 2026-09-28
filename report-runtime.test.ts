@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { withBrowserPage } from "./test-support/browser";
 import {
   svgFigureA11y,
   tableCellProps,
@@ -167,19 +168,13 @@ test("document provenance is opt-in, string-only, merged and deduplicated", asyn
 
 
 test("SVG figures retain namespaces and geometry in a real browser", async () => {
-  const chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-  if (!(await Bun.file(chrome).exists())) return;
-  const page = new URL("./examples/svg-namespace-test.html", import.meta.url).href;
-  const process = Bun.spawn([
-    chrome, "--headless", "--disable-gpu", "--no-sandbox",
-    "--allow-file-access-from-files", "--run-all-compositor-stages-before-draw",
-    "--virtual-time-budget=3000", "--dump-dom", page,
-  ], { stdout: "pipe", stderr: "pipe" });
-  const output = await new Response(process.stdout).text();
-  expect(await process.exited).toBe(0);
-  expect(output).toContain('data-svg-namespace="http://www.w3.org/2000/svg"');
-  expect(output).toContain('data-shape-namespace="http://www.w3.org/2000/svg"');
-  expect(output).toContain('data-shape-width="80"');
-  expect(output).toContain('data-a11y="namespace-contract-title namespace-contract-description"');
-  expect(output).toContain('data-clip="url(#namespace-contract-clip)"');
-});
+  await withBrowserPage(new URL("./examples/svg-namespace-test.html", import.meta.url), async page => {
+    await page.locator("body[data-svg-namespace]").waitFor();
+    const body = page.locator("body");
+    expect(await body.getAttribute("data-svg-namespace")).toBe("http://www.w3.org/2000/svg");
+    expect(await body.getAttribute("data-shape-namespace")).toBe("http://www.w3.org/2000/svg");
+    expect(await body.getAttribute("data-shape-width")).toBe("80");
+    expect(await body.getAttribute("data-a11y")).toBe("namespace-contract-title namespace-contract-description");
+    expect(await body.getAttribute("data-clip")).toBe("url(#namespace-contract-clip)");
+  });
+}, 15_000);

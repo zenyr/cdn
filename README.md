@@ -22,6 +22,19 @@ bun install
 bun run build
 ```
 
+Tests use Bun with the pinned `playwright-core` development dependency and its
+managed Chromium headless shell. Install the browser once after installing or
+updating dependencies, then run the full check:
+
+```sh
+bun run test:setup
+bun run check
+```
+
+On Linux CI, use `bun run test:setup --with-deps` to also install browser system
+dependencies. Browser tests fail if the managed browser is missing; no system
+Chrome installation is used and no tests are silently skipped.
+
 GitHub-backed jsDelivr URL format:
 
 ```text

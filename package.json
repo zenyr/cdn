@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "bun run build.ts",
+    "test:setup": "playwright-core install chromium --only-shell",
     "check": "bun run build && bun test"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@types/bun": "latest",
     "@types/react": "latest",
-    "@types/react-dom": "latest"
+    "@types/react-dom": "latest",
+    "playwright-core": "1.63.0"
   }
 }

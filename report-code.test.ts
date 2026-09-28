@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { highlightCode } from "./src/report-code";
+import { withBrowserPage } from "./test-support/browser";
 
 const render = (source: string, language?: string) =>
   renderToStaticMarkup(createElement("code", null, highlightCode(source, language)));
@@ -53,17 +54,10 @@ test("HTML and script-like input stays escaped text", () => {
 });
 
 test("browser tokens inherit Mantine colors and survive color scheme changes", async () => {
-  const chrome = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
-  if (!(await Bun.file(chrome).exists())) return;
-  const page = new URL("./examples/code-highlight-test.html", import.meta.url).href;
-  const process = Bun.spawn([
-    chrome, "--headless", "--disable-gpu", "--no-sandbox",
-    "--allow-file-access-from-files", "--run-all-compositor-stages-before-draw",
-    "--virtual-time-budget=3000", "--dump-dom", page,
-  ], { stdout: "pipe", stderr: "pipe" });
-  const output = await new Response(process.stdout).text();
-  expect(await process.exited).toBe(0);
-  for (const attribute of ["code-verified", "scheme-colors", "same-token", "plain", "languages", "inherits-token"]) {
-    expect(output).toContain(`data-${attribute}="true"`);
-  }
-});
+  await withBrowserPage(new URL("./examples/code-highlight-test.html", import.meta.url), async page => {
+    await page.locator('body[data-code-verified="true"]').waitFor();
+    for (const attribute of ["scheme-colors", "same-token", "plain", "languages", "inherits-token"]) {
+      expect(await page.locator("body").getAttribute(`data-${attribute}`)).toBe("true");
+    }
+  });
+}, 15_000);
