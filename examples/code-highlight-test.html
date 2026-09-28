@@ -1,0 +1,69 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../dist/report-runtime.esm.css"><script type="module" src="../dist/report-runtime.esm.js"></script></head>
+<body><div id="root"></div><script id="source" type="text/plain">
+<ThemeProbe />
+
+```ts
+const value: number = 42;
+```
+
+```yml
+enabled: true
+```
+
+```kts
+val name = "Kotlin"
+```
+
+```diff
+-removed
++added
+```
+
+```plaintext
+const plain = 42;
+```
+</script>
+<script>
+addEventListener("zenyr:ready", ({ detail: runtime }) => {
+  const { React, Mantine } = runtime;
+  let originalToken;
+  let lightColor;
+  function ThemeProbe() {
+    const { setColorScheme } = Mantine.useMantineColorScheme();
+    const scheme = Mantine.useComputedColorScheme("light");
+    const [phase, setPhase] = React.useState(0);
+    React.useEffect(() => {
+      if (phase === 0) {
+        setColorScheme("light");
+        setPhase(1);
+        return;
+      }
+      const timer = setTimeout(() => {
+        const token = document.querySelector(".language-ts .hljs-keyword");
+        if (phase === 1 && scheme === "light") {
+          originalToken = token;
+          lightColor = getComputedStyle(token).color;
+          setColorScheme("dark");
+          setPhase(2);
+        } else if (phase === 2 && scheme === "dark") {
+          const darkColor = getComputedStyle(token).color;
+          document.body.dataset.schemeColors = String(lightColor !== darkColor);
+          document.body.dataset.sameToken = String(token === originalToken);
+          document.body.dataset.plain = String(!document.querySelector(".language-plaintext span"));
+          document.body.dataset.languages = String(["yml", "kts", "diff"].every(
+            lang => document.querySelector(`.language-${lang} span`)
+          ));
+          document.documentElement.style.setProperty("--mantine-color-red-light-color", "rgb(123, 45, 67)");
+          document.body.dataset.inheritsToken = String(getComputedStyle(token).color === "rgb(123, 45, 67)");
+          document.documentElement.style.removeProperty("--mantine-color-red-light-color");
+          document.body.dataset.codeVerified = "true";
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }, [phase, scheme]);
+    return null;
+  }
+  runtime.mountDocument({ root: "#root", source: "#source", components: { ThemeProbe } });
+}, { once: true });
+</script></body></html>

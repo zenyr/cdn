@@ -37,6 +37,17 @@ Load `fonts.css` before the component stylesheet. Sans KR is the default UI font
 
 ## Mixed reports and static diagrams
 
+Fenced code blocks are highlighted once during document mounting using lowlight and
+only these bundled highlight.js grammars: JavaScript (`js`, `javascript`),
+TypeScript (`ts`, `typescript`), Kotlin (`kt`, `kts`, `kotlin`), JSON (`json`),
+Bash (`bash`, `sh`, `shell`), CSS (`css`), XML (`xml`, `html`, `svg`),
+Diff (`diff`, `patch`), Markdown (`md`, `markdown`), and YAML (`yaml`, `yml`).
+Language names are case-insensitive. `text`, `txt`, `plaintext`, omitted or unknown
+languages, and blocks over 20,000 UTF-16 code units stay plain text. There is no
+auto-detection or additional network request. Tokens render as React text/spans;
+light/dark colors inherit Mantine's semantic `*-light-color`, `*-light`, and
+`dimmed` CSS tokens without re-tokenization or hardcoded palettes. Inline code stays plain.
+
 The safe MDX walker supports prose, GFM tables, registered chart components, and static editorial SVG figures in one document. `SvgFigure` is built in; no Mermaid parser, dynamic import, worker, fetch, `eval`, or unchecked HTML injection is used.
 
 ```mdx

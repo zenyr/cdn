@@ -47,13 +47,13 @@ export const ossLicenses: readonly OssLicense[] = [
   },
   {
     "name": "@mantine/core",
-    "version": "9.4.1",
+    "version": "9.6.2",
     "license": "MIT",
     "projectUrl": "https://mantine.dev/"
   },
   {
     "name": "@mantine/hooks",
-    "version": "9.4.1",
+    "version": "9.6.2",
     "license": "MIT",
     "projectUrl": "https://mantine.dev"
   },
@@ -214,6 +214,12 @@ export const ossLicenses: readonly OssLicense[] = [
     "projectUrl": "https://github.com/theKashey/get-nonce"
   },
   {
+    "name": "highlight.js",
+    "version": "11.11.2",
+    "license": "BSD-3-Clause",
+    "projectUrl": "https://highlightjs.org/"
+  },
+  {
     "name": "htm",
     "version": "3.1.1",
     "license": "Apache-2.0",
@@ -254,6 +260,12 @@ export const ossLicenses: readonly OssLicense[] = [
     "version": "3.1.0",
     "license": "MIT",
     "projectUrl": "https://github.com/wooorm/longest-streak"
+  },
+  {
+    "name": "lowlight",
+    "version": "3.3.0",
+    "license": "MIT",
+    "projectUrl": "https://github.com/wooorm/lowlight"
   },
   {
     "name": "markdown-table",

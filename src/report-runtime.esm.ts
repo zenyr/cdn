@@ -39,6 +39,8 @@ import {
 } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "./report-runtime.css";
+import "./report-code.css";
+import { highlightCode } from "./report-code";
 import {
   svgFigureA11y,
   tableCellProps,
@@ -349,7 +351,7 @@ const renderNode = (
         React.createElement(
           "code",
           { className: node.lang ? `language-${node.lang}` : undefined },
-          node.value,
+          highlightCode(node.value ?? "", node.lang),
         ),
       );
     case "break":

@@ -1,0 +1,21 @@
+.report-document pre {
+  --code-comment: var(--mantine-color-dimmed);
+  --code-keyword: var(--mantine-color-red-light-color);
+  --code-string: var(--mantine-color-green-light-color);
+  --code-number: var(--mantine-color-blue-light-color);
+  --code-title: var(--mantine-color-violet-light-color);
+  --code-add-bg: var(--mantine-color-green-light);
+  --code-del-bg: var(--mantine-color-red-light);
+}
+.report-document pre :is(.hljs-comment, .hljs-quote) { color: var(--code-comment); }
+.report-document pre :is(.hljs-keyword, .hljs-selector-tag, .hljs-doctag, .hljs-deletion) { color: var(--code-keyword); }
+.report-document pre :is(.hljs-string, .hljs-regexp, .hljs-addition) { color: var(--code-string); }
+.report-document pre :is(.hljs-number, .hljs-literal, .hljs-attr, .hljs-attribute, .hljs-variable, .hljs-template-variable, .hljs-built_in, .hljs-type, .hljs-bullet) { color: var(--code-number); }
+.report-document pre :is(.hljs-title, .hljs-section, .hljs-name, .hljs-selector-class, .hljs-selector-id, .hljs-symbol, .hljs-meta, .hljs-link) { color: var(--code-title); }
+.report-document pre .hljs-addition { background: var(--code-add-bg); }
+.report-document pre .hljs-deletion { background: var(--code-del-bg); }
+.report-document pre :is(.hljs-strong, .hljs-section) { font-weight: 700; }
+.report-document pre .hljs-emphasis { font-style: italic; }
+@media print {
+  .report-document pre span[class] { color: inherit; background: transparent; }
+}
