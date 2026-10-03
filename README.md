@@ -84,6 +84,8 @@ The safe MDX walker supports prose, GFM tables, registered chart components, and
 
 `id` must be document-unique and use letters, digits, `_`, and `-`. `label` is required; use `description` when the visual needs a longer accessible explanation. `caption` is visible context. The SVG is parsed with `DOMParser`, restricted to a presentation/geometry allowlist, stripped of authored dimensions for responsiveness, and has IDs/references prefixed per figure. Scripts, event handlers, foreign content, animation elements, external links/images, styles, and non-fragment URLs are rejected. Keep essential conclusions in prose or the caption rather than encoding them only visually.
 
+SVG figures require a finite `viewBox` with positive dimensions. Internal IDs must be unique, must not use the reserved `title` or `description` names, and fragment references must resolve within the figure. A failed figure preserves report prose and renders its label, description, and caption with `data-figure-error`; it also emits `zenyr:figure-error` for diagnostics. Treat this event or marker as a verification failure.
+
 `OssLicenseFooter` is also built in. If not authored explicitly, exactly one is appended to the report. Its click-triggered Mantine popover lists the complete production dependency closure resolved from `bun.lock`, including transitive runtime packages and fonts, while explicitly excluding development-only tools and report content. `bun run build` regenerates `src/oss-licenses.ts` from the lockfile and installed package license metadata; do not edit the inventory manually.
 
 

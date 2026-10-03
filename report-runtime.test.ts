@@ -105,7 +105,7 @@ test("static SVG figure contract is accessible, sanitized and dependency-free", 
   });
   expect(() => svgFigureA11y("bad id", "Diagram")).toThrow();
   expect(() => svgFigureA11y("diagram", " ")).toThrow();
-  const runtime = await read("src/report-runtime.esm.ts");
+  const runtime = await read("src/report-svg.ts");
   expect(runtime).toContain("function SvgFigure");
   expect(runtime).toContain("new DOMParser()");
   expect(runtime).toContain("document.createElementNS(svgNamespace, element.localName)");
@@ -114,7 +114,7 @@ test("static SVG figure contract is accessible, sanitized and dependency-free", 
   expect(runtime).not.toContain("document.importNode(svg, true)");
   expect(runtime).toContain("contains an external reference");
   expect(runtime).toContain('"marker-start", "marker-mid", "marker-end"');
-  expect(runtime).toContain("defaultComponents: ComponentRegistry = { ThemeToggle, SvgFigure, OssLicenseFooter }");
+  expect(await read("src/report-runtime.esm.ts")).toContain("defaultComponents: ComponentRegistry = { ThemeToggle, SvgFigure, OssLicenseFooter }");
   expect(runtime).not.toMatch(/from ["']mermaid["']/);
 });
 
@@ -176,5 +176,31 @@ test("SVG figures retain namespaces and geometry in a real browser", async () =>
     expect(await body.getAttribute("data-shape-width")).toBe("80");
     expect(await body.getAttribute("data-a11y")).toBe("namespace-contract-title namespace-contract-description");
     expect(await body.getAttribute("data-clip")).toBe("url(#namespace-contract-clip)");
+  });
+}, 15_000);
+
+test("invalid SVG figures preserve prose and expose a figure failure", async () => {
+  await withBrowserPage(new URL("./examples/svg-namespace-test.html", import.meta.url), async page => {
+    await page.locator("body[data-svg-namespace]").waitFor();
+    for (const svg of [
+      '<svg><rect width="10" height="10" /></svg>',
+      '<svg viewBox="0 0 100 40"><rect id="same"/><rect id="same"/></svg>',
+      '<svg viewBox="0 0 100 40"><use href="#missing"/></svg>',
+      '<svg viewBox="0 0 100 40"><script /></svg>',
+      '<svg viewBox="0 0 100 40"><rect id="title"/></svg>',
+    ]) {
+      const id = `failure-${Math.random().toString(36).slice(2)}`;
+      await page.evaluate(({ svg, id }) => {
+        const root = document.createElement("div");
+        const source = document.createElement("script");
+        source.type = "text/plain";
+        source.textContent = `Retained prose\n\n<SvgFigure id="${id}" label="Broken figure" description="Accessible explanation">\n\`\`\`svg\n${svg}\n\`\`\`\n</SvgFigure>`;
+        document.body.append(root, source);
+        (window as any).Zenyr.report.mountDocument({ root, source });
+      }, { svg, id });
+      await page.locator(`[data-figure-error="${id}"]`).waitFor();
+      expect(await page.locator(`[data-figure-error="${id}"]`).textContent()).toContain("Accessible explanation");
+    }
+    expect(await page.getByText("Retained prose", { exact: true }).count()).toBe(5);
   });
 }, 15_000);
