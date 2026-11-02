@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="../dist/fonts.css"><link rel="stylesheet" href="../dist/report-runtime.esm.css"><script type="module" src="../dist/report-runtime.esm.js"></script></head>
+<body><div id="root"></div><script id="source" type="text/plain">
+한글 본문 유지
+
+```mermaid
+flowchart LR
+  A[브라우저] --> B[서버]
+```
+
+```MERMAID
+sequenceDiagram
+  사용자->>서버: 요청
+  서버-->>사용자: 응답
+```
+
+```mermaid
+not-a-diagram
+```
+
+```js
+const answer = 42;
+```
+</script><script>
+addEventListener("zenyr:ready", ({ detail }) => detail.mountDocument({ root: "#root", source: "#source" }), { once: true });
+</script></body></html>

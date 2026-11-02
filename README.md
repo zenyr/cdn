@@ -61,7 +61,34 @@ auto-detection or additional network request. Tokens render as React text/spans;
 light/dark colors inherit Mantine's semantic `*-light-color`, `*-light`, and
 `dimmed` CSS tokens without re-tokenization or hardcoded palettes. Inline code stays plain.
 
-The safe MDX walker supports prose, GFM tables, registered chart components, and static editorial SVG figures in one document. `SvgFigure` is built in; no Mermaid parser, dynamic import, worker, fetch, `eval`, or unchecked HTML injection is used.
+The safe MDX walker supports prose, GFM tables, registered chart components, Mermaid diagrams, and static editorial SVG figures in one document. Only the Mermaid renderer uses dynamic import; no worker, fetch, or `eval` is used.
+
+### Mermaid diagrams
+
+Fenced `mermaid` code blocks (case-insensitive) render automatically with Obsidian's
+[Pele](https://github.com/obsidianmd/pele), pinned to 1.10.0. All diagram types ship
+in `dist/report-mermaid-renderer.esm.js`, loaded once on the first Mermaid block.
+Reports without Mermaid do not download it. The renderer URL resolves relative to
+the runtime URL, preserving its CDN commit pin. Publish both files together and
+allow module loading from that CDN in the host CSP. While loading, source stays
+visible; a loading failure uses the same error fallback as an invalid diagram. Pele owns generated SVG
+rendering and escaping; authored SVG still uses the separate `SvgFigure` allowlist.
+Diagram links and images are disabled. Source is limited to 20,000 UTF-16 code units
+and 500 edges. Colors and fonts follow the report theme, with black-on-white print
+colors. Pele measures browser fonts and adapts layout when the container resizes.
+
+````md
+```mermaid
+flowchart LR
+  A[브라우저] --> B[서버]
+```
+````
+
+Each diagram provides a source disclosure for a text alternative. Keep essential
+conclusions in surrounding prose. Invalid or oversized diagrams preserve the
+report and show their source with `data-mermaid-error`; a `zenyr:mermaid-error`
+event identifies the failed diagram. Treat either as a verification failure.
+The generated OSS footer includes Pele's MIT notice.
 
 ```mdx
 ## Request path

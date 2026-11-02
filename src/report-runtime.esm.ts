@@ -41,6 +41,7 @@ import "@mantine/core/styles.css";
 import "./report-runtime.css";
 import "./report-code.css";
 import { highlightCode } from "./report-code";
+import { MermaidBlock } from "./report-mermaid";
 import {
   tableCellProps,
   themeToggleProps,
@@ -210,6 +211,9 @@ const renderNode = (
     case "inlineCode":
       return React.createElement("code", { key }, node.value);
     case "code":
+      if (node.lang?.trim().toLowerCase() === "mermaid") {
+        return React.createElement(MermaidBlock, { key, source: node.value ?? "" });
+      }
       return React.createElement(
         "pre",
         { key },

@@ -9,6 +9,7 @@ test("build emits expected CDN assets", async () => {
     "dist/embed-test.esm.js",
     "dist/embed-test.esm.css",
     "dist/report-runtime.esm.js",
+    "dist/report-mermaid-renderer.esm.js",
     "dist/report-runtime.esm.css",
     "dist/embed-test.iife.js",
     "dist/embed-test.iife.css",
@@ -26,6 +27,7 @@ test("browser assets avoid restricted runtime APIs", async () => {
       "dist/embed-test.iife.js",
       "dist/embed-test.esm.js",
       "dist/report-runtime.esm.js",
+      "dist/report-mermaid-renderer.esm.js",
     ].map(read),
   );
   const source = sources.join("\n");
@@ -69,4 +71,13 @@ test("font CSS keeps unicode ranges and external WOFF2 assets", async () => {
       `${import.meta.dir}/dist/fonts/ibm-plex-mono-latin-500-normal.woff2`,
     ).exists(),
   ).toBe(true);
+});
+
+test("Mermaid renderer stays outside the initial report bundle", async () => {
+  const runtime = Bun.file(`${import.meta.dir}/dist/report-runtime.esm.js`);
+  expect(runtime.size).toBeLessThan(1_000_000);
+  expect(await runtime.text()).toContain("./report-mermaid-renderer.esm.js");
+  const loader = await read("src/report-mermaid.ts");
+  expect(loader).toContain('new URL("./report-mermaid-renderer.esm.js", import.meta.url).href');
+  expect(Bun.file(`${import.meta.dir}/dist/report-mermaid-renderer.esm.js`).size).toBeGreaterThan(500_000);
 });

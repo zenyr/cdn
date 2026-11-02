@@ -586,6 +586,12 @@ export const ossLicenses: readonly OssLicense[] = [
     "projectUrl": "https://github.com/wooorm/parse-entities"
   },
   {
+    "name": "pele",
+    "version": "1.10.0",
+    "license": "MIT",
+    "projectUrl": "https://pele.run"
+  },
+  {
     "name": "react",
     "version": "19.2.0",
     "license": "MIT",

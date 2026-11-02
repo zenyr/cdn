@@ -1,0 +1,36 @@
+.report-mermaid-figure {
+  margin: 1.75rem 0;
+  --pele-bg: var(--mantine-color-body);
+  --pele-fg: var(--mantine-color-text);
+  --pele-muted: var(--mantine-color-dimmed);
+  --pele-line: var(--mantine-color-text);
+  --pele-surface: var(--mantine-color-default-hover);
+  --pele-surface-alt: var(--mantine-color-body);
+  --pele-border: var(--mantine-color-default-border);
+  --pele-accent: var(--mantine-primary-color-filled);
+  --pele-font: var(--font-sans);
+  --pele-font-mono: var(--font-mono);
+}
+.report-mermaid-canvas {
+  overflow-x: auto;
+  width: 100%;
+}
+.report-mermaid-figure summary {
+  cursor: pointer;
+  color: var(--mantine-color-dimmed);
+  font-size: 0.85rem;
+}
+@media print {
+  .report-mermaid-figure {
+    --pele-bg: #fff;
+    --pele-fg: #000;
+    --pele-muted: #444;
+    --pele-line: #000;
+    --pele-surface: #f3f3f3;
+    --pele-surface-alt: #fff;
+    --pele-border: #bbb;
+    --pele-accent: #000;
+  }
+  .report-mermaid-canvas { overflow: visible; }
+  .report-mermaid-figure:not([data-mermaid-error]) details { display: none; }
+}
