@@ -3,6 +3,7 @@ import { chromium, type Page } from "playwright-core";
 export async function withBrowserPage(
   fixture: URL,
   verify: (page: Page) => Promise<void>,
+  prepare?: (page: Page) => Promise<void>,
 ): Promise<void> {
   const browser = await chromium.launch({
     headless: true,
@@ -13,6 +14,7 @@ export async function withBrowserPage(
     page.setDefaultTimeout(5000);
     const errors: Error[] = [];
     page.on("pageerror", error => errors.push(error));
+    await prepare?.(page);
     await page.goto(fixture.href);
     await verify(page);
     if (errors.length) throw new AggregateError(errors, "Browser fixture raised page errors");

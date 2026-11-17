@@ -1,10 +1,22 @@
 import { expect, test } from "bun:test";
 import { withBrowserPage } from "./test-support/browser";
+import type { Page } from "playwright-core";
 
 const fixture = new URL("./examples/mdxcn-test.html", import.meta.url);
 
+const withMdxcnPage = (url: URL, verify: (page: Page) => Promise<void>) =>
+  withBrowserPage(url, verify, async page => {
+    await page.route('https://cdn.jsdelivr.net/gh/zenyr/cdn@*/dist/**', async route => {
+      const asset = new URL(route.request().url()).pathname.split('/dist/')[1];
+      await route.fulfill({
+        path: `${import.meta.dir}/dist/${asset}`,
+        headers: { 'access-control-allow-origin': '*' },
+      });
+    });
+  });
+
 test("all mdxcn components render Markdown, tables and data children", async () => {
-  await withBrowserPage(fixture, async page => {
+  await withMdxcnPage(fixture, async page => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.locator('[data-frame]').nth(75).waitFor();
     await page.waitForFunction(() => !document.querySelector('[data-mdxcn-loading], [data-mdxcn-error]'));
@@ -22,7 +34,8 @@ test("all mdxcn components render Markdown, tables and data children", async () 
     expect(await page.locator('[data-frame]').filter({ hasText: 'November 2026' }).locator('.grid-cols-7').first().innerText()).toMatch(/^M/);
     expect(await page.locator('[data-frame]').filter({ hasText: 'November 2026' }).innerText()).toContain('[17]');
     const missing = await page.evaluate(async () => {
-      const renderer = await import(new URL('../dist/report-mdxcn-renderer.esm.js', location.href).href);
+      const script = document.querySelector<HTMLScriptElement>('script[src]')!;
+      const renderer = await import(new URL('./report-mdxcn-renderer.esm.js', script.src).href);
       return Object.keys(renderer.mdxcnComponents).filter(name => !Object.hasOwn((window as any).Zenyr.report.defaultComponents, name));
     });
     expect(missing).toEqual([]);
@@ -37,7 +50,7 @@ test("all mdxcn components render Markdown, tables and data children", async () 
 }, 20_000);
 
 test("mdxcn loads on demand once and keeps prose during loading and failure", async () => {
-  await withBrowserPage(new URL("./examples/code-highlight-test.html", import.meta.url), async page => {
+  await withMdxcnPage(new URL("./examples/code-highlight-test.html", import.meta.url), async page => {
     const requests: string[] = [];
     page.on('request', request => {
       if (request.url().endsWith('report-mdxcn-renderer.esm.js')) requests.push(request.url());
@@ -64,7 +77,7 @@ test("mdxcn loads on demand once and keeps prose during loading and failure", as
 }, 20_000);
 
 test("a malformed component preserves its block and surrounding prose", async () => {
-  await withBrowserPage(fixture, async page => {
+  await withMdxcnPage(fixture, async page => {
     await page.locator('[data-frame]').nth(75).waitFor();
     await page.evaluate(() => {
       const root = document.createElement('div');
