@@ -74,7 +74,7 @@ usual; there is no separate fallback body to maintain. The
 [compatibility gallery](examples/mdxcn-test.html) contains 76 examples, including
 all visual components, Korean text, Markdown tables, nested checklists, and tagged data.
 The gallery uses absolute jsDelivr URLs pinned to runtime commit
-`f95230c0cf63e85e424bd52e5a2a885e45d96247`, so the HTML file can be copied elsewhere.
+`14a90fe4b2a2cd38ecb622e678dc07040a107fbb`, so the HTML file can be copied elsewhere.
 The browser tests intercept these CDN URLs with local build output; they do not
 require network access or use the published bundle in place of the code under test.
 
