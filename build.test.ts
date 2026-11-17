@@ -10,6 +10,7 @@ test("build emits expected CDN assets", async () => {
     "dist/embed-test.esm.css",
     "dist/report-runtime.esm.js",
     "dist/report-mermaid-renderer.esm.js",
+    "dist/report-mdxcn-renderer.esm.js",
     "dist/report-runtime.esm.css",
     "dist/embed-test.iife.js",
     "dist/embed-test.iife.css",
@@ -28,6 +29,7 @@ test("browser assets avoid restricted runtime APIs", async () => {
       "dist/embed-test.esm.js",
       "dist/report-runtime.esm.js",
       "dist/report-mermaid-renderer.esm.js",
+    "dist/report-mdxcn-renderer.esm.js",
     ].map(read),
   );
   const source = sources.join("\n");
@@ -80,4 +82,20 @@ test("Mermaid renderer stays outside the initial report bundle", async () => {
   const loader = await read("src/report-mermaid.ts");
   expect(loader).toContain('new URL("./report-mermaid-renderer.esm.js", import.meta.url).href');
   expect(Bun.file(`${import.meta.dir}/dist/report-mermaid-renderer.esm.js`).size).toBeGreaterThan(500_000);
+});
+
+test("mdxcn renderer and shared imports stay pinned to emitted files", async () => {
+  const transpiler = new Bun.Transpiler({ loader: "js" });
+  const shared = [...new Bun.Glob("report-shared-*.js").scanSync(`${import.meta.dir}/dist`)];
+  expect(shared.length).toBeGreaterThan(0);
+  for (const file of ["report-runtime.esm.js", "report-mdxcn-renderer.esm.js", ...shared]) {
+    const source = await read(`dist/${file}`);
+    expect(source).not.toMatch(/\beval\s*\(|\bnew\s+(?:Function|Worker)\b|\b(?:fetch|createObjectURL)\s*\(/);
+    for (const entry of transpiler.scan(source).imports) {
+      expect(entry.path.startsWith("./")).toBe(true);
+      expect(await Bun.file(`${import.meta.dir}/dist/${entry.path.slice(2)}`).exists()).toBe(true);
+    }
+  }
+  expect(await read("dist/report-runtime.esm.js")).toContain("./report-mdxcn-renderer.esm.js");
+  expect(await read("dist/report-runtime.esm.css")).toContain("repeating-linear-gradient");
 });

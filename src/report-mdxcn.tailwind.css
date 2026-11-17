@@ -1,0 +1,39 @@
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "./vendor/mdxcn";
+@custom-variant dark (&:where([data-mantine-color-scheme="dark"], [data-mantine-color-scheme="dark"] *));
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-destructive: var(--destructive);
+  --color-graph-accent: var(--graph-accent);
+  --color-graph-accent-2: var(--graph-accent-2);
+  --color-graph-accent-3: var(--graph-accent-3);
+  --color-graph-frame: var(--graph-frame);
+  --color-graph-muted: var(--graph-muted);
+  --color-graph-faint: var(--graph-faint);
+  --color-contrast-14: var(--contrast-14);
+  --color-contrast-23: var(--contrast-23);
+  --color-contrast-45: var(--contrast-45);
+  --color-contrast-70: var(--contrast-70);
+}
+@utility graph-frame {
+  background-image: repeating-linear-gradient(to right, var(--graph-frame) 0 2px, transparent 2px 7px), repeating-linear-gradient(to bottom, var(--graph-frame) 0 2px, transparent 2px 7px), repeating-linear-gradient(to right, var(--graph-frame) 0 2px, transparent 2px 7px), repeating-linear-gradient(to bottom, var(--graph-frame) 0 2px, transparent 2px 7px);
+  background-repeat: repeat-x, repeat-y, repeat-x, repeat-y;
+  background-position: 0 0, 100% 0, 0 100%, 0 0;
+  background-size: 100% 1px, 1px 100%, 100% 1px, 1px 100%;
+}
+@utility graph-rule {
+  height: 1px;
+  background-image: repeating-linear-gradient(to right, var(--graph-frame) 0 2px, transparent 2px 7px);
+}
+@utility graph-rule-y {
+  width: 1px;
+  background-image: repeating-linear-gradient(to bottom, var(--graph-frame) 0 2px, transparent 2px 7px);
+}

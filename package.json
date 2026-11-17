@@ -13,9 +13,11 @@
     "@fontsource/ibm-plex-sans-kr": "5.3.0",
     "@mantine/core": "9.6.2",
     "@mantine/hooks": "9.6.2",
+    "cn": "0.2.0",
     "highlight.js": "11.11.2",
     "htm": "3.1.1",
     "lowlight": "3.3.0",
+    "motion": "13.1.1",
     "pele": "1.10.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
@@ -25,9 +27,11 @@
     "unified": "11.0.5"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "4.1.18",
     "@types/bun": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "playwright-core": "1.63.0"
+    "playwright-core": "1.63.0",
+    "tailwindcss": "4.1.18"
   }
 }

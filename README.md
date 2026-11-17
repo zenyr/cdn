@@ -13,7 +13,9 @@ Versioned browser assets for embed compatibility experiments.
 - `dist/fonts.css`: IBM Plex Sans KR 400/500/600/700 and IBM Plex Mono 400/500 declarations
 - `dist/fonts/`: WOFF2 files split by Unicode range for on-demand browser loading
 - `dist/report-runtime.esm.js`: shared React/Mantine runtime for prebaked reports
-- `dist/report-runtime.esm.css`: Mantine and report baseline styles
+- `dist/report-runtime.esm.css`: Mantine, report baseline, and compiled mdxcn styles
+- `dist/report-mdxcn-renderer.esm.js`: mdxcn components, loaded on first use
+- `dist/report-shared-*.js`: React code shared by the report runtime and mdxcn renderer
 
 Build with Bun:
 
@@ -61,7 +63,68 @@ auto-detection or additional network request. Tokens render as React text/spans;
 light/dark colors inherit Mantine's semantic `*-light-color`, `*-light`, and
 `dimmed` CSS tokens without re-tokenization or hardcoded palettes. Inline code stays plain.
 
-The safe MDX walker supports prose, GFM tables, registered chart components, Mermaid diagrams, and static editorial SVG figures in one document. Only the Mermaid renderer uses dynamic import; no worker, fetch, or `eval` is used.
+The safe MDX walker supports prose, GFM tables, registered chart components, Mermaid diagrams, and static editorial SVG figures in one document. The mdxcn and Mermaid renderers use dynamic module imports; no worker, fetch, or `eval` is used.
+
+### Markdown-powered mdxcn components
+
+All 46 mdxcn visual components, the frame primitives (including `GraphArrow` and
+`GraphFrameProvider`), and their data child tags are registered by default.
+Write the document once in `<script type="text/mdx">` and call `mountDocument` as
+usual; there is no separate fallback body to maintain. The
+[compatibility gallery](examples/mdxcn-test.html) contains 76 examples, including
+all visual components, Korean text, Markdown tables, nested checklists, and tagged data.
+
+```mdx
+<GraphTimeline title="배포 과정">
+
+- 준비: 설정을 확인합니다
+- **배포: 새 버전을 적용합니다**
+- *확인: 결과를 점검합니다*
+
+</GraphTimeline>
+
+<GraphTable title="확인 결과">
+
+| 항목 | 상태 |
+| --- | --- |
+| 본문 | 준비 |
+| 차트 | 준비 |
+
+</GraphTable>
+```
+
+The components read ordinary Markdown lists, tables, headings, emphasis, and code
+blocks. Tagged children such as `<Event date="배포" state="now">새 버전</Event>`
+and `<Row>본문 | 준비</Row>` also work. The existing restricted MDX contract stays
+in place: imports, JavaScript expressions, spread attributes, and expression
+attributes are rejected. Use Markdown children, string attributes, and valueless
+boolean attributes instead of the upstream examples' JavaScript array/object props.
+Calendar numeric attributes (`year`, `month`, `today`, `weekStartsOn`) and activity
+`weekStartsOn` accept numeric strings.
+
+The runtime displays the Markdown children while the mdxcn module loads, then
+replaces each block independently. Reports without mdxcn do not request that
+module. A loading or rendering failure retains the block's readable children or
+scalar data and marks it with `data-mdxcn-error`; `zenyr:mdxcn-error` identifies the
+component. Treat either as a verification failure. This starts after the base
+JavaScript runtime loads; it does not provide a no-JavaScript document fallback.
+
+Inside mdxcn blocks, Markdown tables are passed directly to the component and
+checkbox state is exposed as a disabled checkbox. Ordinary report tables retain
+their scrolling wrapper. Tailwind utilities are compiled during the build without
+Preflight; no Tailwind browser runtime or extra stylesheet tag is required.
+Colors follow Mantine's light/dark theme, and print styles reveal animated content.
+
+Publish the runtime, mdxcn renderer, and generated `report-shared-*.js` files from
+the same build and commit together. Relative module URLs preserve the CDN commit
+pin. Allow module loading from that CDN in the host CSP. The portable HTML still
+references CDN assets; fully offline export is not part of this format.
+
+The source is vendored from mdxcn commit
+`884eba5356762cf49f8828db8f861dc2f33d65e4`, with its MIT license in
+`src/vendor/mdxcn/LICENSE` and its notice in the generated OSS footer. Comark,
+Knap, and Next.js MDX wiring are excluded because `mountDocument` supplies the
+MDX integration here. See `src/vendor/mdxcn/PROVENANCE.md` before updating the source.
 
 ### Mermaid diagrams
 
@@ -113,7 +176,7 @@ The generated OSS footer includes Pele's MIT notice.
 
 SVG figures require a finite `viewBox` with positive dimensions. Internal IDs must be unique, must not use the reserved `title` or `description` names, and fragment references must resolve within the figure. A failed figure preserves report prose and renders its label, description, and caption with `data-figure-error`; it also emits `zenyr:figure-error` for diagnostics. Treat this event or marker as a verification failure.
 
-`OssLicenseFooter` is also built in. If not authored explicitly, exactly one is appended to the report. Its click-triggered Mantine popover lists the complete production dependency closure resolved from `bun.lock`, including transitive runtime packages and fonts, while explicitly excluding development-only tools and report content. `bun run build` regenerates `src/oss-licenses.ts` from the lockfile and installed package license metadata; do not edit the inventory manually.
+`OssLicenseFooter` is also built in. If not authored explicitly, exactly one is appended to the report. Its click-triggered Mantine popover lists the complete production dependency closure resolved from `bun.lock`, including transitive runtime packages, fonts, and vendored mdxcn, while explicitly excluding development-only tools and report content. `bun run build` regenerates `src/oss-licenses.ts` from the lockfile, installed package license metadata, and the pinned mdxcn source; do not edit the inventory manually.
 
 
 ### Document content-source notices

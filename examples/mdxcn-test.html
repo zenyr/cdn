@@ -1,0 +1,906 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>mdxcn compatibility gallery</title>
+  <link rel="stylesheet" href="../dist/fonts.css" />
+  <link rel="stylesheet" href="../dist/report-runtime.esm.css" />
+  <script type="module" src="../dist/report-runtime.esm.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/mdx" id="doc">
+# mdxcn 전체 컴포넌트
+
+본문은 MDX 한 번만 작성합니다.
+
+## Example 1
+
+<GraphTable title="WHAT THE RESEARCH COST">
+
+| Agent | Tokens | Tool calls | Time |
+| --- | ---: | ---: | ---: |
+| Inks and paper | 115,207 | 120 | 16m |
+| Overprint and drift | 135,218 | 164 | 16m |
+| Naming the patterns | 186,716 | 112 | 18m |
+| Total | 437,141 | 396 | ~50m |
+
+</GraphTable>
+
+## Example 2
+
+<GraphTable title="TASTE, EXPLAINED">
+
+| Decision | Reason |
+| --- | --- |
+| ease-out on enter | feels snappier |
+| 180ms, not 400ms | feels faster, more responsive |
+| springs for gestures | they carry your momentum |
+| scale 0.97 on press | it makes the UI feel alive |
+| no animation at all | you open it hundreds of times |
+
+</GraphTable>
+
+## Example 3
+
+<GraphSheet title="RFC">
+
+### Scope
+
+| Item | Owner | Status |
+| --- | --- | --- |
+| CLI copies files | priya | done |
+| Docs previews | jon | now |
+
+### Out of scope
+
+| Item | Owner | Status |
+| --- | --- | --- |
+| npm package | — | later |
+| Figma kit | — | later |
+
+</GraphSheet>
+
+## Example 4
+
+<GraphSheet title="SURFACE">
+
+### Frame
+
+| Name | Kind | Stable |
+| --- | --- | --- |
+| Graph | primitive | yes |
+| GraphBody | primitive | yes |
+
+### Charts
+
+| Name | Kind | Stable |
+| --- | --- | --- |
+| GraphTable | component | yes |
+| GraphSheet | component | new |
+
+</GraphSheet>
+
+## Example 5
+
+<GraphFlow title="OPTIMISTIC UI">
+
+tap → server → update
+
+tap → **update** → *server syncs*
+
+</GraphFlow>
+
+## Example 6
+
+<GraphFlow title="PUBLISH PATH">
+
+write → review → ship
+
+</GraphFlow>
+
+## Example 7
+
+<GraphBars title="THROUGHPUT" palette="duo">
+
+- before: 2 4 3 5 2
+- **after**: 2 4 3 5 2
+
+</GraphBars>
+
+## Example 8
+
+<GraphBars title="DRAFT TO SHIPPED" processor="edit">
+
+- draft: 1 2 2 3 1
+- **shipped**: 3 5 4 6 5
+
+</GraphBars>
+
+## Example 9
+
+<GraphRank title="ROUTES">
+
+- 12,400 /docs
+- 4,100 /install
+- 860 /plot
+- 420 /rank
+
+</GraphRank>
+
+## Example 10
+
+<GraphCells title="TWO WAYS TO LEARN">
+
+- fragments: 1 0 1 0 0 / 0 1 0 1 0 / 1 0 0 0 1
+- a system: 1 1 1 1 1 / 1 1 1 1 1 / 1 1 1 1 1
+
+</GraphCells>
+
+## Example 11
+
+<GraphCells title="COVERAGE">
+
+- this week: 1 1 1 1 0 / 1 1 0 1 1 / 1 0 1 1 1
+
+</GraphCells>
+
+## Example 12
+
+<GraphMeter title="DISK">78% — of 500 GB</GraphMeter>
+
+## Example 13
+
+<GraphSpark title="DEPLOYS">
+
+2 3 0*3 5 8 6 9 — three quiet days, then a busy week
+
+</GraphSpark>
+
+## Example 14
+
+<GraphTree title="REGISTRY">
+
+- registry/default
+  - graph-frame
+    - graph-frame.tsx — ui
+    - graph-motion.ts — lib
+  - graph-tree
+    - **graph-tree.tsx** — ui
+
+</GraphTree>
+
+## Example 15
+
+<GraphTree title="ON CALL">
+
+- platform
+  - api — priya
+  - **workers** — jon
+  - edge — mina
+
+</GraphTree>
+
+## Example 16
+
+<GraphTimeline title="SHIPPED">
+
+- Mar 12: CLI copies the files
+- **Mar 18: Docs, live previews**
+- *Apr 02: Registry listed*
+
+</GraphTimeline>
+
+## Example 17
+
+<GraphTimeline title="INCIDENT">
+
+- 14:02: p95 crossed 800ms
+- **14:11: rolled back the cache flag**
+- *14:40: write the postmortem*
+
+</GraphTimeline>
+
+## Example 18
+
+<GraphTimeline title="NIGHT">
+
+- 14:02: p95 crossed 800ms — paged the on-call
+
+- **14:11: rolled back the cache flag**
+
+  Errors stopped inside a minute. Latency took ten.
+
+- *14:40: write the postmortem*
+
+</GraphTimeline>
+
+## Example 19
+
+<GraphCheck title="LAUNCH">
+
+- [x] freeze tokens
+- [x] ship registry json
+- [ ] write the postmortem — still open
+
+</GraphCheck>
+
+## Example 20
+
+<GraphCheck title="REVIEW">
+
+- [x] title is a sentence
+- [x] numbers are tabular
+- [ ] motion respects reduced — check the timer
+
+</GraphCheck>
+
+## Example 21
+
+<GraphCheck title="RELEASE">
+
+- [x] freeze tokens
+- [ ] docs
+  - [x] grammar page
+  - [ ] mdx page — needs screenshots
+- [ ] tag 1.3.0
+
+</GraphCheck>
+
+## Example 22
+
+<GraphStack title="BUNDLE" palette="multi">
+
+- marketing: 48 js, 22 css, 30 images
+- docs: 28 js, 18 css, 54 images
+
+</GraphStack>
+
+## Example 23
+
+<GraphFunnel title="INSTALL" stage="ship">
+
+- 12,400 docs
+- 4,100 copy
+- 860 ship
+
+</GraphFunnel>
+
+## Example 24
+
+<GraphPlot title="SIGNUPS" variant="line">
+
+- Mon: 12
+- Tue: 18
+- Wed: 15
+- Thu: 24
+- Fri: 31
+
+</GraphPlot>
+
+## Example 25
+
+<GraphWaffle title="TESTS">91% — 182 of 200 green</GraphWaffle>
+
+## Example 26
+
+<GraphDiff title="BUNDLE" palette="duo">
+
+- vendor: 84 kb
+- app: +31 kb
+- sourcemaps: -12 kb
+- **shipped: 103 kb**
+
+</GraphDiff>
+
+## Example 27
+
+<GraphDiff title="HEADCOUNT">
+
+- start: 12
+- hired: +3
+- left: -1
+- **now: 14**
+
+</GraphDiff>
+
+## Example 28
+
+<GraphDiff title="MIGRATION">
+
+- config: ~~next.config.js~~ next.config.ts
+- middleware: ~~middleware.ts~~ proxy.ts
+- app: +31 kb
+
+</GraphDiff>
+
+## Example 29
+
+<GraphInvoice
+  title="INVOICE 0041"
+  from="mdxcn"
+  to="Acme Studio"
+>
+
+- No.: 0041
+- Issued: Mar 12, 2026
+- Due: Apr 11, 2026
+
+| Description | Qty | Rate | Amount |
+| --- | --- | --- | --- |
+| Design system | 1 | 4,200 | 4,200 |
+| Motion pass | 1 | 1,800 | 1,800 |
+| Docs rewrite | 8h | 180 | 1,440 |
+
+**Amount due** 7,440
+
+Net 30. Wire to the account on file.
+
+</GraphInvoice>
+
+## Example 30
+
+<GraphInvoice title="QUOTE" from="mdxcn" to="Northwind">
+
+- Valid until: May 01
+
+| Description | Amount |
+| --- | --- |
+| Registry install | 0 |
+| Custom graph | 2,400 |
+
+**Estimate** 2,400
+
+</GraphInvoice>
+
+## Example 31
+
+<GraphCompare title="PLANS" accent="Studio">
+
+| | Solo | Studio |
+| --- | --- | --- |
+| Registry | yes | yes |
+| Accent picker | yes | yes |
+| Private source | no | yes |
+| Price | $0 | $24 |
+
+</GraphCompare>
+
+## Example 32
+
+<GraphCompare title="RENDER" accent="This">
+
+| | Mermaid | SVG | This |
+| --- | --- | --- | --- |
+| Source | .md | .svg | .tsx |
+| In git | yes | no | yes |
+| Themable | no | no | yes |
+
+</GraphCompare>
+
+## Example 33
+
+<GraphMatrix title="DETECT" accent="Pos">
+
+| | Pos | Neg |
+| --- | --- | --- |
+| Pos | 41 | 3 |
+| Neg | 2 | 54 |
+
+</GraphMatrix>
+
+## Example 34
+
+<GraphMatrix title="P95" accent="write">
+
+| | iad | sfo | nrt |
+| --- | --- | --- | --- |
+| read | 12 | 18 | 41 |
+| write | 28 | 33 | 67 |
+| queue | 4 | 6 | 9 |
+
+</GraphMatrix>
+
+## Example 35
+
+<GraphStat title="THIS WEEK">
+
+- 12,400 docs
+- 4,100 copies
+- **860 shipped**
+
+</GraphStat>
+
+## Example 36
+
+<GraphStat title="P95">
+
+- 142ms read — −18ms
+- **410ms write — +22ms**
+
+</GraphStat>
+
+## Example 37
+
+<GraphKpi title="READS">
+
+**12,400** this week — +18%
+
+4 5 5 6 8 7 9 8 11 10 12 14
+
+</GraphKpi>
+
+## Example 38
+
+<GraphSpec title="TYPE">
+
+- Family: Geist Mono
+- Size: 14 / 21
+- Tracking: +0.02em
+- Figures: tabular
+- **Accent: --graph-accent**
+
+</GraphSpec>
+
+## Example 39
+
+<GraphSpec title="SHIP TO">
+
+- Name: A. Rao
+- City: Bengaluru
+- Carrier: Delhivery
+- **ETA: Thu**
+
+</GraphSpec>
+
+## Example 40
+
+<GraphActivity title="COMMITS">
+
+- 2026-03-02: 1 3 0 4 2 0*2 5 6 2 3 1 0*2 2 4 7 3 5 0*2 1 2 0 3 4 0*3
+
+</GraphActivity>
+
+## Example 41
+
+<GraphHeatmap title="DEPLOYS" palette="duo">
+
+| | 0 | 4 | 8 | 12 | 16 | 20 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Mon | 0 | 1 | 4 | 8 | 6 | 1 |
+| Tue | 0 | 0 | 5 | 9 | 4 | 2 |
+| Wed | 1 | 0 | 6 | 12 | 5 | 1 |
+| Thu | 0 | 2 | 4 | 7 | 8 | 3 |
+| Fri | 0 | 1 | 3 | 5 | 2 | 0 |
+| Sat | 0 | 0 | 1 | 0 | 0 | 0 |
+| Sun | 0 | 0 | 0 | 1 | 0 | 0 |
+
+</GraphHeatmap>
+
+## Example 42
+
+<GraphWaterfall title="MARGIN" palette="duo">
+
+- Revenue: 48
+- Refunds: -6
+- Hosting: -4
+- Profit: 38
+
+</GraphWaterfall>
+
+## Example 43
+
+<GraphWaterfall title="TEAM">
+
+- Start: 12
+- Hired: 4
+- Left: -2
+- Now: 14
+
+</GraphWaterfall>
+
+## Example 44
+
+<GraphUptime title="API" from="Jun 1" to="Aug 29">
+
+ok*18 degraded ok*22 down*2 ok*17 degraded*2 ok*28
+
+</GraphUptime>
+
+## Example 45
+
+<GraphSlope title="TRAFFIC" palette="duo" fromLabel="2025" toLabel="2026">
+
+- docs: 8,200 → 12,400
+- copy: 5,100 → 4,100
+- ship: 640 → 860
+
+</GraphSlope>
+
+## Example 46
+
+<GraphSlope title="P95" fromLabel="before" toLabel="after">
+
+- read: 160 → 142
+- write: 388 → 410
+- cache: 12 → 12
+
+</GraphSlope>
+
+## Example 47
+
+<GraphBullet title="BUDGET">
+
+- Design: 42 / 40
+- Motion: 18 / 24
+- Docs: 9 / 12
+
+</GraphBullet>
+
+## Example 48
+
+<GraphBullet title="LOAD">
+
+- CPU: 72 / 80 of 100
+- RAM: 34 / 64 of 100
+- SSD: 91 / 90 of 100
+
+</GraphBullet>
+
+## Example 49
+
+<GraphTimer title="INCIDENT" kind="elapsed">
+
+2026-08-27T08:00:00Z — api
+
+</GraphTimer>
+
+## Example 50
+
+<GraphCountdown title="LAUNCH">2027-01-15T09:00:00Z — until 2.0</GraphCountdown>
+
+## Example 51
+
+<Steps title="INSTALL">
+
+1. Copy the source
+
+   Run the shadcn CLI. Files land under registry/default.
+
+2. **Register it**
+
+   Export the component from mdx-components.tsx.
+
+3. *Write*
+
+   Use it between paragraphs. No import line.
+
+</Steps>
+
+## Example 52
+
+<Steps title="ROLLBACK">
+
+1. Flip the flag — cache.v2 to off in the dashboard.
+2. Watch p95 — Two minutes. It should drop under 300ms.
+3. Write it down — Open the postmortem before you leave.
+
+</Steps>
+
+## Example 53
+
+<Changelog version="1.2.0" date="Mar 12">
+
+- added: Callout, Quote, Steps, Terminal, Changelog
+- changed: Graphs read MDX children as well as arrays
+- fixed: Timeline connector on Safari
+- removed: The legacy accent prop
+
+</Changelog>
+
+## Example 54
+
+<Changelog title="CHANGELOG" version="0.9.0" date="Feb 02">
+
+- added: Knap filters
+- fixed: Uptime wraps at 30 days on narrow screens
+
+</Changelog>
+
+## Example 55
+
+<Annotate title="mdx-components.tsx">
+
+```tsx
+import { withMdxcn } from "@/registry/default/mdx/mdx" // (1)
+import { GraphTimeline } from "@/registry/default/graph-timeline/graph-timeline"
+
+export function useMDXComponents(components) {
+  return withMdxcn({ ...components, GraphTimeline }) // (2)
+}
+```
+
+1. Runs on the server. The file has no "use client".
+2. Your overrides stay. A swapped tag still reads as that tag.
+
+</Annotate>
+
+## Example 56
+
+<Annotate>
+
+```python
+def fetch(url, times=3):  # (1)
+    for attempt in range(times):
+        try:
+            return get(url)
+        except TimeoutError:  # (2)
+            sleep(2 ** attempt)
+    raise
+```
+
+1. Three tries. Enough for a flaky network, not for a service that is down.
+2. Only timeouts retry. A 500 fails fast.
+
+</Annotate>
+
+## Example 57
+
+<Decision title="DATABASE" status="accepted" date="Mar 12">
+
+- **Postgres** — boring, and we already run it
+- *Mongo* — no joins we trust
+- SQLite — fine until the second writer
+
+Revisit if writes pass 2k a second.
+
+</Decision>
+
+## Example 58
+
+<Decision title="CHARTS">
+
+- **Glyphs in a frame** — copy the source, no chart runtime
+- *SVG* — does not survive a README
+- *Canvas* — no text to select or search
+- Mermaid — fine for flows, wrong for numbers
+
+Every figure has a fenced twin for GitHub.
+
+</Decision>
+
+## Example 59
+
+<Chat title="SESSION">
+
+- you: which graph shows a rollback?
+- agent: Timeline. Bold the row where you rolled back.
+- agent: *reads graph-timeline.tsx*
+- agent: Then Diff for what the rollback changed.
+- you: and on GitHub?
+- agent: Paste the fenced ASCII. GitHub does not run MDX.
+
+</Chat>
+
+## Example 60
+
+<Chat title="SUPPORT" you="priya">
+
+- priya: the timeline renders empty in our docs
+
+- jon: Do you swap `li` in mdx-components?
+
+  Wrap the map in `withMdxcn` and the graphs see list items again.
+
+- priya: that was it
+
+</Chat>
+
+## Example 61
+
+<Env>
+
+```bash
+# Postgres connection string. Required.
+DATABASE_URL=postgres://localhost:5432/app
+
+# Origin for absolute links in llms.txt
+SITE_URL=https://mdxcn.dev
+
+# Leave empty to turn analytics off
+ANALYTICS_ID=
+```
+
+</Env>
+
+## Example 62
+
+<Env title="WORKER">
+
+- **QUEUE_URL**: redis://localhost:6379 — jobs and retries
+- CONCURRENCY: 4 — per process
+- LOG_LEVEL: info
+
+</Env>
+
+## Example 63
+
+<Endpoint>
+
+GET /api/v1/components/:slug
+
+One component from the catalog, with its props.
+
+| Param | Type | |
+| --- | --- | --- |
+| **slug** | string | Registry slug, like `graph-table` |
+
+```bash
+$ curl https://mdxcn.dev/api/v1/components/graph-meter
+```
+
+```json
+{ "slug": "graph-meter", "name": "GraphMeter", "props": [ … ] }
+```
+
+</Endpoint>
+
+## Example 64
+
+<Keys title="SHORTCUTS">
+
+- **⌘K: search the docs**
+- ⌘⇧C: copy the page as Markdown
+- Ctrl+Shift+P: command palette
+- g then d: go to docs
+- Esc: close
+
+</Keys>
+
+## Example 65
+
+<Faq>
+
+### Is this an npm package?
+
+No. The CLI copies the source into `registry/default`. You own it.
+
+### Does it need MDX?
+
+No. Comark reads `::graph-*` blocks from plain `.md`, and every figure has a fenced ASCII twin for GitHub.
+
+### **Why is my timeline empty?**
+
+Your `mdx-components.tsx` swaps `li` for its own component. Wrap the map in `withMdxcn`.
+
+</Faq>
+
+## Example 66
+
+<GraphBoard title="ROADMAP">
+
+### Shipped
+- Callout, Steps, Terminal
+- Comark adapter
+
+### Now
+- **Children for every graph**
+- Board and Score — this drop
+
+### Later
+- *Figma kit*
+- *Vue port* — if someone asks twice
+
+</GraphBoard>
+
+## Example 67
+
+<GraphBoard title="SPRINT 14" palette="duo">
+
+### Todo
+- *Postmortem for the cache flag*
+
+### Doing
+- **Roll back cache.v2**
+
+### Done
+- Page the on-call
+- Freeze deploys
+
+</GraphBoard>
+
+## Example 68
+
+<GraphScore title="REVIEW">
+
+- Performance: 4/5
+- Accessibility: 5/5
+- **Docs: 2.5/5**
+- Motion: 4/5
+
+</GraphScore>
+
+## Example 69
+
+<GraphScore title="VENDORS" glyphs="ascii">
+
+- Acme: 8/10
+- Globex: 6.5
+- Initech: 4
+
+</GraphScore>
+
+## Example 70
+
+<Callout title="한글 안내">
+
+MDX 한 번만 작성합니다.
+
+</Callout>
+
+## Example 71
+
+<Quote by="작성자">
+
+한글 인용문입니다.
+
+</Quote>
+
+## Example 72
+
+<GraphCalendar year="2026" month="11" weekStartsOn="1" today="17">
+
+- **17: 배포**
+- 20: 검토
+
+</GraphCalendar>
+
+## Example 73
+
+<GraphGantt title="계획">
+
+- 준비: 0 → 0.3
+- 배포: 0.3 → 1
+
+</GraphGantt>
+
+## Example 74
+
+<GraphTimeline title="태그 데이터">
+
+<Event date="준비" label="설정 확인" />
+<Event date="배포" state="now">새 버전 적용</Event>
+
+</GraphTimeline>
+
+## Example 75
+
+<GraphTable title="태그 표">
+
+<Head>대상 | 상태</Head>
+<Row>본문 | 준비</Row>
+<Foot>전체 | 완료</Foot>
+
+</GraphTable>
+
+## Example 76
+
+<GraphFrameProvider frame="rule">
+
+<Graph title="프레임">
+
+<GraphBody>직접 구성한 본문</GraphBody>
+
+</Graph>
+
+</GraphFrameProvider>
+  </script>
+  <script>
+    const mount = (runtime) => runtime.mountDocument({ root: "#root", source: "#doc" });
+    globalThis.Zenyr?.report
+      ? mount(globalThis.Zenyr.report)
+      : addEventListener("zenyr:ready", ({ detail }) => mount(detail), { once: true });
+  </script>
+</body>
+</html>

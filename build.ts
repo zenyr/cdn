@@ -50,7 +50,6 @@ const esm = await Bun.build({
   entrypoints: [
     `${import.meta.dir}/src/probe.esm.ts`,
     `${import.meta.dir}/src/embed-test.esm.tsx`,
-    `${import.meta.dir}/src/report-runtime.esm.ts`,
     `${import.meta.dir}/src/report-mermaid-renderer.esm.ts`,
   ],
   outdir: `${import.meta.dir}/dist`,
@@ -62,11 +61,41 @@ const esm = await Bun.build({
   define: { "process.env.NODE_ENV": '"production"' },
 });
 
-for (const result of [iife, esm]) {
-  if (!result.success) {
-    for (const log of result.logs) console.error(log);
-    process.exit(1);
-  }
+const reports = await Bun.build({
+  entrypoints: [
+    `${import.meta.dir}/src/report-runtime.esm.ts`,
+    `${import.meta.dir}/src/report-mdxcn-renderer.esm.ts`,
+  ],
+  outdir: `${import.meta.dir}/dist`,
+  naming: {
+    entry: "[name].[ext]",
+    chunk: "report-shared-[hash].[ext]",
+    asset: "[name].[ext]",
+  },
+  format: "esm",
+  splitting: true,
+  banner: "/*! mdxcn · Copyright (c) 2026 Keshav Bagaade · MIT · see mdxcn-LICENSE.txt */",
+  target: "browser",
+  minify: true,
+  sourcemap: "external",
+  define: { "process.env.NODE_ENV": '"production"' },
+});
+
+for (const result of [iife, esm, reports]) {
+  if (!result.success) throw new AggregateError(result.logs, "Browser asset build failed");
+}
+
+const tailwind = Bun.spawn([
+  "bun", "x", "--no-install", "tailwindcss",
+  "-i", "src/report-mdxcn.tailwind.css",
+  "-o", "dist/report-mdxcn.css", "--minify",
+], { cwd: import.meta.dir, stdout: "inherit", stderr: "inherit" });
+if (await tailwind.exited !== 0) throw new Error("mdxcn CSS build failed");
+await Bun.write(`${import.meta.dir}/dist/mdxcn-LICENSE.txt`, Bun.file(`${import.meta.dir}/src/vendor/mdxcn/LICENSE`));
+const runtimeCss = `${import.meta.dir}/dist/report-runtime.esm.css`;
+await Bun.write(runtimeCss, `${await Bun.file(runtimeCss).text()}\n${await Bun.file(`${import.meta.dir}/dist/report-mdxcn.css`).text()}`);
+
+for (const result of [iife, esm, reports]) {
   for (const output of result.outputs) {
     console.log(
       `${output.path.replace(`${import.meta.dir}/`, "")} ${output.size} B`,

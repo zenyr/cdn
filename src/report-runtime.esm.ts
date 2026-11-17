@@ -40,6 +40,8 @@ import {
 import "@mantine/core/styles.css";
 import "./report-runtime.css";
 import "./report-code.css";
+import "./report-mdxcn.css";
+import { isMdxcnItem, mdxcnComponents } from "./report-mdxcn";
 import { highlightCode } from "./report-code";
 import { MermaidBlock } from "./report-mermaid";
 import {
@@ -143,7 +145,7 @@ function OssLicenseFooter() {
         React.createElement(
           "p",
           { className: "report-license-scope" },
-          "This lists the complete production dependency closure resolved from bun.lock for the CDN report runtime and bundled fonts, plus content-source notices declared by this document. It excludes development-only tools. Runtime versions and licenses come from installed package metadata; content-source entries describe provenance and do not claim the report content itself is open source.",
+          "This lists the complete production dependency closure resolved from bun.lock for the CDN report runtime and bundled fonts, vendored mdxcn, plus content-source notices declared by this document. It excludes development-only tools. Runtime versions and licenses come from installed package metadata and the pinned mdxcn source; content-source entries describe provenance and do not claim the report content itself is open source.",
         ),
         React.createElement(
           ScrollArea,
@@ -183,9 +185,10 @@ const renderNode = (
   node: MdxNode,
   components: ComponentRegistry,
   key: React.Key = 0,
+  insideMdxcn = false,
 ): React.ReactNode => {
   const children = () =>
-    node.children?.map((child, index) => renderNode(child, components, index));
+    node.children?.map((child, index) => renderNode(child, components, index, insideMdxcn));
   const element = (
     tag: React.ElementType,
     props: Record<string, unknown> = {},
@@ -197,6 +200,10 @@ const renderNode = (
     case "text":
       return node.value ?? "";
     case "paragraph":
+      if (insideMdxcn && node.children?.every(child =>
+        (child.type === "text" && !child.value?.trim()) ||
+        (child.name != null && isMdxcnItem(child.name)),
+      )) return element(React.Fragment);
       return element("p");
     case "heading":
       return element(`h${node.depth}`);
@@ -239,9 +246,13 @@ const renderNode = (
     case "list":
       return element(node.ordered ? "ol" : "ul");
     case "listItem":
-      return element(
+      return React.createElement(
         "li",
-        node.checked == null ? {} : { "data-checked": node.checked },
+        { key, ...(node.checked == null ? {} : { "data-checked": node.checked }) },
+        insideMdxcn && node.checked != null
+          ? React.createElement("input", { type: "checkbox", checked: node.checked, disabled: true, readOnly: true })
+          : null,
+        children(),
       );
     case "table": {
       const [head, ...body] = node.children ?? [];
@@ -257,26 +268,20 @@ const renderNode = (
                 ...tableCellProps(node.align?.[cellKey], Cell === "th"),
               },
               cell.children?.map((child, childKey) =>
-                renderNode(child, components, childKey),
+                renderNode(child, components, childKey, insideMdxcn),
               ),
             ),
           ),
         );
-      return React.createElement(
-        "div",
-        { key, className: "scroll-x" },
-        React.createElement(
-          "table",
-          null,
-          head && React.createElement("thead", null, row(head, "th", 0)),
-          body.length > 0 &&
-            React.createElement(
-              "tbody",
-              null,
-              body.map((item, index) => row(item, "td", index)),
-            ),
+      const table = React.createElement(
+        "table",
+        { key },
+        head && React.createElement("thead", null, row(head, "th", 0)),
+        body.length > 0 && React.createElement(
+          "tbody", null, body.map((item, index) => row(item, "td", index)),
         ),
       );
+      return insideMdxcn ? table : React.createElement("div", { key, className: "scroll-x" }, table);
     }
     case "tableRow":
       return element("tr");
@@ -288,10 +293,11 @@ const renderNode = (
         return React.createElement(React.Fragment, { key }, children());
       const Component = components[node.name];
       if (!Component) throw new Error(`Unknown MDX component: ${node.name}`);
+      const graphChildren = insideMdxcn || Component === mdxcnComponents[node.name];
       return React.createElement(
         Component,
         { ...mdxProps(node), key, mdx: { text: nodeText(node), node } },
-        children(),
+        node.children?.map((child, index) => renderNode(child, components, index, graphChildren)),
       );
     }
     case "mdxFlowExpression":
@@ -303,7 +309,7 @@ const renderNode = (
   }
 };
 
-const defaultComponents: ComponentRegistry = { ThemeToggle, SvgFigure, OssLicenseFooter };
+const defaultComponents: ComponentRegistry = { ...mdxcnComponents, ThemeToggle, SvgFigure, OssLicenseFooter };
 const containsComponent = (node: MdxNode, name: string): boolean =>
   ((node.type === "mdxJsxFlowElement" || node.type === "mdxJsxTextElement") && node.name === name) ||
   (node.children?.some((child) => containsComponent(child, name)) ?? false);
