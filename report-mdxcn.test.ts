@@ -18,9 +18,9 @@ const withMdxcnPage = (url: URL, verify: (page: Page) => Promise<void>) =>
 test("all mdxcn components render Markdown, tables and data children", async () => {
   await withMdxcnPage(fixture, async page => {
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await page.locator('[data-frame]').nth(80).waitFor();
+    await page.locator('[data-frame]').nth(88).waitFor();
     await page.waitForFunction(() => !document.querySelector('[data-mdxcn-loading], [data-mdxcn-error]'));
-    expect(await page.locator('[data-frame]').count()).toBe(81);
+    expect(await page.locator('[data-frame]').count()).toBe(89);
     expect(await page.locator('[data-mdxcn-error]').count()).toBe(0);
     expect(await page.locator('[data-frame]').evaluateAll(figures => figures.every(figure => (figure.textContent?.trim().length ?? 0) > 5))).toBe(true);
     const tables = page.locator('[data-frame]').filter({ hasText: 'WHAT THE RESEARCH COST' });
@@ -40,7 +40,7 @@ test("all mdxcn components render Markdown, tables and data children", async () 
     expect(await tables.evaluate(element => getComputedStyle(element).backgroundImage)).toBe('none');
     expect(await tables.getAttribute('data-frame')).toBe('none');
     expect(await tables.locator('.graph-rule-y').first().evaluate(element => getComputedStyle(element).display)).toBe('none');
-    expect(await page.locator('.report-section').count()).toBe(2);
+    expect(await page.locator('.report-section').count()).toBe(3);
     expect(await page.locator('.report-section').first().evaluate(element => getComputedStyle(element, '::after').backgroundImage)).toContain('linear-gradient');
     expect(await page.locator('.report-section-grid').evaluate(element => getComputedStyle(element).gridTemplateColumns.split(' ').length)).toBe(2);
     const colors = await page.locator('.report-mdxcn-GraphStack.report-mdxcn-palette-multi').first().evaluate(element => {
@@ -85,7 +85,7 @@ test("mdxcn loads on demand once and keeps prose during loading and failure", as
     await page.locator('.report-document').waitFor();
     expect(requests).toHaveLength(0);
     await page.goto(fixture.href);
-    await page.locator('[data-frame]').nth(80).waitFor();
+    await page.locator('[data-frame]').nth(88).waitFor();
     expect(requests).toHaveLength(1);
     await page.route('**/report-mdxcn-renderer.esm.js', async route => {
       await page.locator('[data-mdxcn-loading]').first().waitFor();
@@ -104,7 +104,7 @@ test("mdxcn loads on demand once and keeps prose during loading and failure", as
 
 test("a malformed component preserves its block and surrounding prose", async () => {
   await withMdxcnPage(fixture, async page => {
-    await page.locator('[data-frame]').nth(80).waitFor();
+    await page.locator('[data-frame]').nth(88).waitFor();
     await page.evaluate(() => {
       const root = document.createElement('div');
       const source = document.createElement('script');
@@ -116,6 +116,49 @@ test("a malformed component preserves its block and surrounding prose", async ()
     await page.locator('[data-mdxcn-error="GraphTable"]').waitFor();
     expect(await page.getByText('주변 본문 유지', { exact: true }).count()).toBe(1);
     expect(await page.locator('[data-mdxcn-error="GraphTable"]').innerText()).toContain('원래 블록 유지');
-    expect(await page.locator('[data-frame]').count()).toBe(81);
+    expect(await page.locator('[data-frame]').count()).toBe(89);
   });
 }, 15_000);
+
+test("Korean multiline content keeps invoice insets, note alignment and fixed uptime cells", async () => {
+  await withMdxcnPage(fixture, async page => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.locator('[data-frame]').nth(88).waitFor();
+    await page.evaluate(() => document.fonts.ready);
+    for (const width of [1100, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      const notes = await page.getByRole('figure', { name: 'K01 / 한국어 워커 설정', exact: true }).locator('.report-env-row').first().evaluate(row => {
+        const name = row.querySelector('.report-env-name')!.getBoundingClientRect();
+        const value = row.querySelector('.report-env-value')!.getBoundingClientRect();
+        const note = row.querySelector('.report-env-note')!;
+        const bounds = note.getBoundingClientRect();
+        return { sameStart: Math.abs(name.x - bounds.x) < 1, below: bounds.y >= Math.max(name.bottom, value.bottom), paragraphs: note.textContent?.includes('\n\n'), whitespace: getComputedStyle(note).whiteSpace, fits: bounds.right <= row.getBoundingClientRect().right + 1 };
+      });
+      expect(notes).toEqual({ sameStart: true, below: true, paragraphs: true, whitespace: 'pre-line', fits: true });
+      for (const name of ['INVOICE 0041', 'QUOTE', 'K03 / 보고서 제작 내역']) {
+        const invoice = page.getByRole('figure', { name, exact: true });
+        expect(await invoice.locator('dd').evaluateAll(cells => cells.every(cell => getComputedStyle(cell).marginLeft === '0px'))).toBe(true);
+        const inset = await invoice.locator('.report-invoice-body').evaluate(element => getComputedStyle(element).paddingLeft);
+        expect(inset).toBe(width < 640 ? '16px' : '20px');
+      }
+      for (const name of ['.env', 'WORKER']) {
+        const aligned = await page.getByRole('figure', { name, exact: true }).locator('.report-env-row').first().evaluate(row => {
+          const name = row.querySelector('.report-env-name')!.getBoundingClientRect();
+          const note = row.querySelector('.report-env-note')!.getBoundingClientRect();
+          return Math.abs(name.x - note.x) < 1;
+        });
+        expect(aligned).toBe(true);
+      }
+      const widths = await page.getByRole('figure', { name: 'API', exact: true }).locator('.report-uptime-cell').evaluateAll(cells => cells.map(cell => cell.getBoundingClientRect().width));
+      expect(Math.max(...widths) - Math.min(...widths)).toBeLessThan(0.1);
+      const symbols = await page.getByRole('figure', { name: 'API', exact: true }).locator('.report-uptime-symbol').evaluateAll(cells => cells.map(cell => cell.getBoundingClientRect().width));
+      expect(Math.max(...symbols) - Math.min(...symbols)).toBeLessThan(0.1);
+      expect(await page.getByRole('figure', { name: 'API', exact: true }).locator('.report-uptime-symbol[data-custom="false"][data-status="degraded"]').count()).toBeGreaterThan(0);
+      const longTable = page.getByRole('figure', { name: 'K04 / 검토 항목과 상세 설명', exact: true });
+      expect(await longTable.locator('tbody td').first().locator('p').count()).toBe(2);
+      expect(await page.getByRole('note', { name: 'K08 / 여러 줄 안내', exact: true }).locator('br').count()).toBe(2);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
+    }
+    expect(await page.locator('[data-mdxcn-error]').count()).toBe(0);
+  });
+}, 20_000);

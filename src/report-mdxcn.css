@@ -153,7 +153,74 @@
 .report-section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 24px 0; }
 .report-section-grid .report-graph-title { color: var(--report-accent); }
 .report-section-grid > [data-frame] { margin: 0; padding: 20px; border: 1px solid var(--graph-frame); background: var(--report-surface-alt); }
+.report-document [data-frame] :where(dl, dt, dd) { margin: 0; }
+.report-document figure.report-mdxcn-GraphInvoice > .report-invoice-body { padding: 20px; }
+.report-document .report-mdxcn-GraphInvoice :is(th, td) { padding: 10px 12px; }
+.report-document .report-mdxcn-GraphInvoice thead th[colspan] { padding: 0; }
+.report-document .report-mdxcn-GraphInvoice tbody td { border-bottom: 1px solid var(--graph-frame); }
+.report-document .report-mdxcn-GraphInvoice tbody tr:last-child td { border-bottom: 0; }
+.report-document :is(.report-mdxcn-GraphInvoice, .report-mdxcn-GraphTable) td:first-child {
+  min-width: 10rem;
+  max-width: 32rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.report-document .report-mdxcn-GraphInvoice td:not(:first-child) { white-space: nowrap; }
+.report-document .report-mdxcn-GraphTable td:has(> p) { min-width: 16rem; }
+.report-document .report-mdxcn-GraphTable td > p + p { margin-top: 0.65rem; }
+.report-document .report-invoice-body dl > div { min-width: 0; max-width: 100%; }
+.report-document .report-invoice-meta-value { overflow-wrap: anywhere; }
+.report-document .report-env-row {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 14rem) minmax(0, 1fr);
+  grid-template-areas: "mark name value" ". note note";
+  align-items: baseline;
+  column-gap: 12px;
+  row-gap: 4px;
+}
+.report-env-marker { grid-area: mark; }
+.report-env-name { grid-area: name; min-width: 0; overflow-wrap: anywhere; }
+.report-env-value { grid-area: value; min-width: 0; overflow-wrap: anywhere; }
+.report-env-note { grid-area: note; min-width: 0; white-space: pre-line; }
+.report-document .report-uptime-cell { width: 1ch; min-width: 1ch; }
+.report-uptime-symbol {
+  position: relative;
+  display: inline-block;
+  width: 1ch;
+  height: 1em;
+  overflow: hidden;
+  vertical-align: -0.1em;
+  text-align: center;
+  line-height: 1;
+}
+.report-uptime-symbol[data-custom="false"][data-status="ok"] { background: currentColor; }
+.report-uptime-symbol[data-custom="false"][data-status="degraded"] {
+  border: 1px solid currentColor;
+  background: repeating-linear-gradient(135deg, currentColor 0 1px, transparent 1px 3px);
+}
+.report-uptime-symbol[data-custom="false"][data-status="down"]::after {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+.report-uptime-symbol[data-custom="false"][data-status="empty"]::after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto;
+  border-top: 1px solid currentColor;
+}
 @media (max-width: 40rem) {
+  .report-document .report-env-row {
+    grid-template-columns: 1.25rem minmax(0, 1fr);
+    grid-template-areas: "mark name" ". value" ". note";
+  }
+  .report-document figure.report-mdxcn-GraphInvoice > .report-invoice-body { padding: 16px; }
   .report-section-heading { padding: 16px; }
   .report-section-body { padding: 16px; }
   .report-section-grid { grid-template-columns: minmax(0, 1fr); }

@@ -59,6 +59,10 @@ function statusTone(
   }
 }
 
+function StatusMark({ status, glyph }: { status: UptimeStatus; glyph?: string }) {
+  return <span className="report-uptime-symbol" data-status={status} data-custom={glyph != null}>{glyph}</span>
+}
+
 function GraphUptime({
   title,
   days: daysProp,
@@ -114,10 +118,10 @@ function GraphUptime({
                 <GraphTrack className="w-auto justify-start gap-0.5">
                   {row.map((day, index) => (
                     <GraphTick
-                      className={cn("flex-none", tone[day])}
+                      className={cn("report-uptime-cell flex-none", tone[day])}
                       key={`${rowIndex}-${index}`}
                     >
-                      {mark[day]}
+                      <StatusMark status={day} glyph={glyphs ? mark[day] : undefined} />
                     </GraphTick>
                   ))}
                 </GraphTrack>
@@ -136,13 +140,13 @@ function GraphUptime({
         </div>
         <p className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-graph-muted">
           <span>
-            <span className={tone.ok}>{mark.ok}</span> up
+            <span className={tone.ok}><StatusMark status="ok" glyph={glyphs ? mark.ok : undefined} /></span> up
           </span>
           <span>
-            <span className={tone.degraded}>{mark.degraded}</span> slow
+            <span className={tone.degraded}><StatusMark status="degraded" glyph={glyphs ? mark.degraded : undefined} /></span> slow
           </span>
           <span>
-            <span className={tone.down}>{mark.down}</span> down
+            <span className={tone.down}><StatusMark status="down" glyph={glyphs ? mark.down : undefined} /></span> down
           </span>
         </p>
         <span className="sr-only">

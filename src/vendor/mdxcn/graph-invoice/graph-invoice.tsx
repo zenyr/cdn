@@ -237,7 +237,7 @@ function GraphInvoice({
 
   return (
     <Graph title={title} className={className} corner={corner} frame={frame}>
-      <GraphBody className="flex flex-col gap-8">
+      <GraphBody className="report-invoice-body flex flex-col gap-6">
         {from || to ? (
           <div className="grid gap-6 sm:grid-cols-2">
             {from ? <Party label="From" party={from} /> : null}
@@ -252,7 +252,7 @@ function GraphInvoice({
                 <dt className="font-mono tracking-wide text-graph-muted uppercase">
                   {entry.label}
                 </dt>
-                <dd className="text-foreground tabular-nums">{entry.value}</dd>
+                <dd className="report-invoice-meta-value text-foreground tabular-nums">{entry.value}</dd>
               </div>
             ))}
           </dl>

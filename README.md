@@ -73,6 +73,12 @@ Write the document once in `<script type="text/mdx">` and call `mountDocument` a
 usual; there is no separate fallback body to maintain. The
 [compatibility gallery](examples/mdxcn-test.html) contains 76 compatibility examples and a grouped theme showcase, including
 all visual components, Korean text, Markdown tables, nested checklists, and tagged data.
+The gallery also includes eight Korean stress examples at `#korean-stress`: long
+configuration keys and URLs, multiline comments, invoice descriptions, rich table
+cells, timeline notes, steps, uptime states, and explicit Markdown line breaks.
+Uptime uses fixed-width CSS symbols by default, so fallback font glyph widths do
+not move cells. Explicit custom glyphs still use fixed-width cells.
+
 The gallery uses absolute jsDelivr URLs pinned to runtime commit
 `5b39b39aab55026064dd08a9bc977abfadca086d`, so the HTML file can be copied elsewhere.
 The browser tests intercept these CDN URLs with local build output; they do not

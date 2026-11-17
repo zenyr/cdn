@@ -9,7 +9,7 @@ import {
   GraphBody,
   hasHost,
   isHost,
-  itemText,
+  itemParts,
   listItems,
   splitDash,
   splitLabel,
@@ -80,7 +80,7 @@ function fromFence(source: string): EnvVar[] {
     const note = all
       .map((entry) => entry.replace(REQUIRED, "").replace(/\s+/g, " ").trim())
       .filter(Boolean)
-      .join(" ")
+      .join("\n")
     vars.push({
       name: match[1] ?? "",
       value: unquote(value.trim()),
@@ -96,8 +96,10 @@ function fromFence(source: string): EnvVar[] {
 function fromList(children: ReactNode): EnvVar[] {
   return listItems(children).map((item) => {
     const content = (item.props as { children?: ReactNode }).children
-    const { label, rest } = splitLabel(itemText(item))
-    const { label: value, rest: note } = splitDash(rest)
+    const { head, body } = itemParts(item)
+    const { label, rest } = splitLabel(textOf(head).trim())
+    const { label: value, rest: inlineNote } = splitDash(rest)
+    const note = [inlineNote, ...body.map(textOf)].filter(Boolean).join("\n\n")
     return {
       name: label,
       value,
@@ -161,20 +163,20 @@ function Env({
         >
           {vars.map((entry, index) => (
             <motion.li
-              className="grid grid-cols-[1.25rem_minmax(0,14rem)_minmax(0,1fr)] items-baseline gap-x-3 gap-y-1 max-sm:grid-cols-[1.25rem_minmax(0,1fr)]"
+              className="report-env-row"
               key={`${entry.name}-${index}`}
               variants={item}
             >
               <span
                 aria-hidden="true"
                 className={cn(
-                  "text-center select-none",
+                  "report-env-marker text-center select-none",
                   entry.required ? accent : "text-transparent"
                 )}
               >
                 {entry.required ? "*" : " "}
               </span>
-              <span className="truncate text-foreground">
+              <span className="report-env-name text-foreground">
                 {entry.name}
                 {entry.required ? (
                   <span className="sr-only"> (required)</span>
@@ -182,14 +184,14 @@ function Env({
               </span>
               <span
                 className={cn(
-                  "min-w-0 break-all tabular-nums max-sm:col-start-2",
+                  "report-env-value tabular-nums",
                   entry.value ? "text-graph-muted" : "text-graph-frame"
                 )}
               >
                 {entry.value || "—"}
               </span>
               {entry.note ? (
-                <span className="col-start-2 text-pretty text-graph-muted sm:col-span-2">
+                <span className="report-env-note text-pretty text-graph-muted">
                   {entry.note}
                 </span>
               ) : null}
