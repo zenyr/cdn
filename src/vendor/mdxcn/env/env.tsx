@@ -1,6 +1,7 @@
 "use client"
 
-import type { ReactNode } from "react"
+import { useContext, type ReactNode } from "react"
+import { ReportLanguageContext } from "../../../report-language"
 import { motion, useReducedMotion } from "motion/react"
 
 import {
@@ -135,6 +136,7 @@ function Env({
   frame,
   className,
 }: EnvProps) {
+  const requiredLabel = useContext(ReportLanguageContext) === "ko" ? "필수" : "required"
   const reduce = useReducedMotion()
   const item = fadeUp(reduce)
   const list = staggerList(reduce, 0.04)
@@ -179,7 +181,7 @@ function Env({
               <span className="report-env-name text-foreground">
                 {entry.name}
                 {entry.required ? (
-                  <span className="sr-only"> (required)</span>
+                  <span className="sr-only"> ({requiredLabel})</span>
                 ) : null}
               </span>
               <span
@@ -200,7 +202,7 @@ function Env({
         </motion.ul>
         {anyRequired ? (
           <p aria-hidden="true" className="text-graph-muted">
-            <span className={accent}>*</span> required
+            <span className={accent}>*</span> {requiredLabel}
           </p>
         ) : null}
       </GraphBody>

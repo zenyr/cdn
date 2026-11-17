@@ -7,3 +7,5 @@ MIT licensed source, vendored at commit `884eba5356762cf49f8828db8f861dc2f33d65e
 Local presentation changes: unframed default, plain captions, CSS corner marks, and eight-series palettes. The report runtime supplies scoped theme styles and ReportSection / ReportGrid separately.
 
 Layout fixes: fixed-width CSS uptime symbols, named grid areas and multiline notes for Env, and invoice body insets. Scoped definition-list resets preserve browser-independent alignment without global Preflight.
+
+Env reads the report language context to localize its required legend and screen-reader label.

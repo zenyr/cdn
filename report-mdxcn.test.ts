@@ -166,3 +166,32 @@ test("Korean multiline content keeps invoice insets, note alignment and fixed up
     expect(await page.locator('[data-mdxcn-error]').count()).toBe(0);
   });
 }, 20_000);
+
+test("required labels follow each document source including Korean outside Env", async () => {
+  await withMdxcnPage(fixture, async page => {
+    await page.locator('[data-frame]').nth(88).waitFor();
+    const sources = [
+      '# English only\n\n<Env>\n\n- **QUEUE_URL**: redis://localhost\n\n</Env>',
+      '# 한국어 문서\n\n<Env>\n\n- **QUEUE_URL**: redis://localhost\n\n</Env>',
+      '<Env>\n\n```bash\n# Required. 한글 주석\nQUEUE_URL=redis://localhost\n```\n\n</Env>',
+      '# English again\n\n<Env>\n\n- **QUEUE_URL**: redis://localhost\n\n</Env>',
+    ];
+    await page.evaluate(sources => {
+      sources.forEach((text, index) => {
+        const root = document.createElement('div');
+        root.id = `language-case-${index}`;
+        const source = document.createElement('script');
+        source.type = 'text/mdx';
+        source.textContent = text;
+        document.body.append(root, source);
+        (window as any).Zenyr.report.mountDocument({ root, source });
+      });
+    }, sources);
+    for (const [index, label] of ['required', '필수', '필수', 'required'].entries()) {
+      const root = page.locator(`#language-case-${index}`);
+      await root.locator('.report-mdxcn-Env').waitFor();
+      expect(await root.locator('.report-mdxcn-Env .report-env-name .sr-only').textContent()).toBe(` (${label})`);
+      expect(await root.locator('.report-mdxcn-Env p[aria-hidden="true"]').textContent()).toBe(`* ${label}`);
+    }
+  });
+}, 15_000);

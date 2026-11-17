@@ -42,6 +42,7 @@ import "./report-runtime.css";
 import "./report-code.css";
 import "./report-mdxcn.css";
 import { isMdxcnItem, mdxcnComponents } from "./report-mdxcn";
+import { detectReportLanguage, ReportLanguageContext } from "./report-language";
 import { ReportGrid, ReportSection } from "./report-sections";
 import { highlightCode } from "./report-code";
 import { MermaidBlock } from "./report-mermaid";
@@ -422,16 +423,21 @@ const mountDocument = ({
       : source;
   if (!rootElement) throw new Error("MDX root not found");
   if (!sourceElement) throw new Error("MDX source not found");
-  const tree = parser.parse(sourceElement.textContent ?? "") as MdxNode;
+  const sourceText = sourceElement.textContent ?? "";
+  const tree = parser.parse(sourceText) as MdxNode;
   createRoot(rootElement).render(
     React.createElement(
-      MantineProvider,
-      { defaultColorScheme: "auto" },
-      React.createElement(ReportDocument, {
-        content: renderNode(tree, { ...defaultComponents, ...components }),
-        appendLicenseFooter: !containsComponent(tree, "OssLicenseFooter"),
-        licenses: mergeLicenses(documentLicenses, hasDiagramDesignFigure(tree)),
-      }),
+      ReportLanguageContext.Provider,
+      { value: detectReportLanguage(sourceText) },
+      React.createElement(
+        MantineProvider,
+        { defaultColorScheme: "auto" },
+        React.createElement(ReportDocument, {
+          content: renderNode(tree, { ...defaultComponents, ...components }),
+          appendLicenseFooter: !containsComponent(tree, "OssLicenseFooter"),
+          licenses: mergeLicenses(documentLicenses, hasDiagramDesignFigure(tree)),
+        }),
+      ),
     ),
   );
 };

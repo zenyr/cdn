@@ -76,6 +76,10 @@ all visual components, Korean text, Markdown tables, nested checklists, and tagg
 The gallery also includes eight Korean stress examples at `#korean-stress`: long
 configuration keys and URLs, multiline comments, invoice descriptions, rich table
 cells, timeline notes, steps, uptime states, and explicit Markdown line breaks.
+The `Env` required legend and screen-reader text use `필수` if the document's
+original MDX contains any Hangul, otherwise `required`. Detection uses the full
+source (including headings, attributes, and code comments), independently for each
+mounted document, rather than the page's `lang` or just the current block.
 Uptime uses fixed-width CSS symbols by default, so fallback font glyph widths do
 not move cells. Explicit custom glyphs still use fixed-width cells.
 
