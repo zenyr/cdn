@@ -84,7 +84,7 @@ Uptime uses fixed-width CSS symbols by default, so fallback font glyph widths do
 not move cells. Explicit custom glyphs still use fixed-width cells.
 
 The gallery uses absolute jsDelivr URLs pinned to runtime commit
-`3eb0414da5aa38f536a32730d18f69f918bca65a`, so the HTML file can be copied elsewhere.
+`dea4ad6683bad279a9a81750419565e8ffdf4da4`, so the HTML file can be copied elsewhere.
 The browser tests intercept these CDN URLs with local build output; they do not
 require network access or use the published bundle in place of the code under test.
 
