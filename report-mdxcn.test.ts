@@ -125,7 +125,7 @@ test("Korean multiline content keeps invoice insets, note alignment and fixed up
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.locator('[data-frame]').nth(88).waitFor();
     await page.evaluate(() => document.fonts.ready);
-    for (const width of [1100, 390]) {
+    for (const width of [1100, 728, 390]) {
       await page.setViewportSize({ width, height: 900 });
       const notes = await page.getByRole('figure', { name: 'K01 / 한국어 워커 설정', exact: true }).locator('.report-env-row').first().evaluate(row => {
         const name = row.querySelector('.report-env-name')!.getBoundingClientRect();
@@ -140,6 +140,9 @@ test("Korean multiline content keeps invoice insets, note alignment and fixed up
         expect(await invoice.locator('dd').evaluateAll(cells => cells.every(cell => getComputedStyle(cell).marginLeft === '0px'))).toBe(true);
         const inset = await invoice.locator('.report-invoice-body').evaluate(element => getComputedStyle(element).paddingLeft);
         expect(inset).toBe(width < 640 ? '16px' : '20px');
+        if (width >= 728) {
+          expect(await invoice.locator('table').evaluate(table => table.getBoundingClientRect().width <= table.parentElement!.clientWidth + 1)).toBe(true);
+        }
       }
       for (const name of ['.env', 'WORKER']) {
         const aligned = await page.getByRole('figure', { name, exact: true }).locator('.report-env-row').first().evaluate(row => {

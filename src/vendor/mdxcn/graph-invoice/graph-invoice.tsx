@@ -234,6 +234,7 @@ function GraphInvoice({
   const showQty = items.some((row) => row.qty != null)
   const showRate = items.some((row) => row.rate != null)
   const columns = 1 + Number(showQty) + Number(showRate) + 1
+  const descriptionWidth = showQty && showRate ? 52 : showQty ? 64 : showRate ? 60 : 72
 
   return (
     <Graph title={title} className={className} corner={corner} frame={frame}>
@@ -259,7 +260,13 @@ function GraphInvoice({
         ) : null}
 
         <div className="@container overflow-x-auto overflow-y-hidden">
-          <table className="w-full border-separate border-spacing-0">
+          <table className="w-full border-separate border-spacing-0" data-columns={columns}>
+            <colgroup>
+              <col style={{ width: `${descriptionWidth}%` }} />
+              {showQty ? <col style={{ width: showRate ? "10%" : "12%" }} /> : null}
+              {showRate ? <col style={{ width: showQty ? "19%" : "20%" }} /> : null}
+              <col />
+            </colgroup>
             <thead>
               <tr>
                 <th className="px-0 pb-3 text-left font-normal text-graph-muted">

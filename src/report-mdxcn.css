@@ -157,6 +157,9 @@
 .report-document figure.report-mdxcn-GraphInvoice > .report-invoice-body { padding: 20px; }
 .report-document .report-mdxcn-GraphInvoice :is(th, td) { padding: 10px 12px; }
 .report-document .report-mdxcn-GraphInvoice thead th[colspan] { padding: 0; }
+.report-document .report-mdxcn-GraphInvoice table { table-layout: fixed; }
+.report-document .report-mdxcn-GraphInvoice table[data-columns="4"] { min-width: 36rem; }
+.report-document .report-mdxcn-GraphInvoice table[data-columns="3"] { min-width: 28rem; }
 .report-document .report-mdxcn-GraphInvoice tbody td { border-bottom: 1px solid var(--graph-frame); }
 .report-document .report-mdxcn-GraphInvoice tbody tr:last-child td { border-bottom: 0; }
 .report-document :is(.report-mdxcn-GraphInvoice, .report-mdxcn-GraphTable) td:first-child {
