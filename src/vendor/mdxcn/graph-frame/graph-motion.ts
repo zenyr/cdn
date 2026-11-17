@@ -179,6 +179,11 @@ const SERIES_TONES = [
   "text-graph-accent",
   "text-graph-accent-2",
   "text-graph-accent-3",
+  "text-graph-accent-4",
+  "text-graph-accent-5",
+  "text-graph-accent-6",
+  "text-graph-accent-7",
+  "text-graph-accent-8",
 ] as const
 
 export function isMonoPalette(palette?: GraphPalette) {
@@ -190,7 +195,7 @@ export function seriesClass(palette: GraphPalette | undefined, index: number) {
     return index === 0 ? "text-graph-accent" : "text-foreground"
   }
 
-  const count = palette === "duo" ? 2 : 3
+  const count = palette === "duo" ? 2 : SERIES_TONES.length
   return SERIES_TONES[index % count]
 }
 

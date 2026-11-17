@@ -10,58 +10,23 @@ import {
 } from "./graph-markdown"
 import { cn } from "cn"
 
-/**
- * Corner marks and the edge title paint over the dashed line with the
- * surface behind the figure. Set `--graph-surface` on a parent when a graph
- * sits on anything other than the page background.
- */
-function GraphCorners({ mark = "+" }: { mark?: string }) {
-  const corner =
-    "pointer-events-none absolute z-10 flex size-4 items-center justify-center bg-[var(--graph-surface,var(--background))] font-mono text-sm leading-none text-graph-frame select-none"
-
-  return (
-    <>
-      <span
-        aria-hidden="true"
-        className={cn(corner, "top-0 left-0 -translate-x-1/2 -translate-y-1/2")}
-      >
-        {mark}
-      </span>
-      <span
-        aria-hidden="true"
-        className={cn(corner, "top-0 right-0 translate-x-1/2 -translate-y-1/2")}
-      >
-        {mark}
-      </span>
-      <span
-        aria-hidden="true"
-        className={cn(
-          corner,
-          "bottom-0 left-0 -translate-x-1/2 translate-y-1/2"
-        )}
-      >
-        {mark}
-      </span>
-      <span
-        aria-hidden="true"
-        className={cn(
-          corner,
-          "right-0 bottom-0 translate-x-1/2 translate-y-1/2"
-        )}
-      >
-        {mark}
-      </span>
-    </>
-  )
+/** Optional corner marks for a framed figure. */
+function GraphCorners({ mark = "" }: { mark?: string }) {
+  return <>{["tl", "tr", "bl", "br"].map(position => (
+    <span key={position} aria-hidden="true" data-custom={Boolean(mark)}
+      className={`report-graph-corner report-graph-corner--${position}`}>
+      {mark}
+    </span>
+  ))}</>
 }
 
 /**
  * How a graph is framed.
  *
- * - `box`: dashed border, corner marks, title on the top edge. The default.
+ * - `box`: solid border, corner marks, title on the top edge.
  * - `corners`: corner marks only, title on the top edge.
- * - `rule`: dashed rules above and below, title on the top rule.
- * - `none`: no border and no padding. The title sits above the content.
+ * - `rule`: solid rules above and below, title on the top rule.
+ * - `none`: no border or padding, with the title above the content (default).
  */
 type GraphFrame = "box" | "corners" | "rule" | "none"
 
@@ -106,7 +71,7 @@ function GraphTitle({
   return (
     <figcaption
       className={cn(
-        "tracking-wide whitespace-nowrap uppercase",
+        "report-graph-title tracking-wide whitespace-nowrap uppercase",
         placement === "edge"
           ? "absolute top-0 left-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-[var(--graph-surface,var(--background))] px-2.5"
           : "mb-4 block truncate",
@@ -114,7 +79,7 @@ function GraphTitle({
       )}
       {...props}
     >
-      <span className="graph-title-ink text-graph-accent">[ {children} ]</span>
+      <span className="graph-title-ink text-graph-accent">{children}</span>
     </figcaption>
   )
 }
@@ -268,20 +233,20 @@ function alignsOf(
 
 function Graph({
   title,
-  corner = "+",
+  corner = "",
   frame: frameProp,
   className,
   children,
   ...props
 }: React.ComponentProps<"figure"> & {
-  /** Drawn as `[ TITLE ]`. Pass `""` to drop a default title. */
+  /** Pass `""` to omit the caption. */
   title?: string
   corner?: string
   frame?: GraphFrame
 }) {
   const captionId = React.useId()
   const inherited = React.useContext(GraphFrameContext)
-  const frame = frameProp ?? inherited ?? "box"
+  const frame = frameProp ?? inherited ?? "none"
 
   return (
     <GraphFrameContext.Provider value={frame}>

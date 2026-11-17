@@ -114,7 +114,7 @@ test("static SVG figure contract is accessible, sanitized and dependency-free", 
   expect(runtime).not.toContain("document.importNode(svg, true)");
   expect(runtime).toContain("contains an external reference");
   expect(runtime).toContain('"marker-start", "marker-mid", "marker-end"');
-  expect(await read("src/report-runtime.esm.ts")).toContain("defaultComponents: ComponentRegistry = { ...mdxcnComponents, ThemeToggle, SvgFigure, OssLicenseFooter }");
+  expect(await read("src/report-runtime.esm.ts")).toContain("defaultComponents: ComponentRegistry = { ...mdxcnComponents, ReportSection, ReportGrid, ThemeToggle, SvgFigure, OssLicenseFooter }");
   expect(runtime).not.toMatch(/from ["']mermaid["']/);
 });
 

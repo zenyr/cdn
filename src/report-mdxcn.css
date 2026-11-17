@@ -1,45 +1,168 @@
 :root, html[data-mantine-color-scheme] {
   --background: var(--mantine-color-body);
   --foreground: var(--mantine-color-text);
-  --muted: var(--mantine-color-default-hover);
-  --muted-foreground: var(--mantine-color-dimmed);
-  --border: var(--mantine-color-default-border);
-  --primary: var(--mantine-primary-color-filled);
+  --muted: var(--report-surface-alt);
+  --muted-foreground: var(--graph-muted);
+  --border: var(--graph-frame);
+  --primary: var(--report-accent);
   --primary-foreground: var(--mantine-color-white);
   --destructive: var(--mantine-color-red-text);
+  --graph-accent: var(--report-accent);
+  --graph-accent-2: var(--report-series-2);
+  --graph-accent-3: var(--report-series-3);
+  --graph-accent-4: var(--report-series-4);
+  --graph-accent-5: var(--report-series-5);
+  --graph-accent-6: var(--report-series-6);
+  --graph-accent-7: var(--report-series-7);
+  --graph-accent-8: var(--report-series-8);
 }
-html[data-mantine-color-scheme="light"] {
-  --graph-accent: oklch(0.5 0.18 255);
-  --graph-accent-2: oklch(0.58 0.14 70);
-  --graph-accent-3: oklch(0.5 0.12 165);
-  --graph-frame: oklch(0.205 0 0 / 0.28);
-  --graph-muted: oklch(0.52 0 0);
-  --graph-faint: oklch(0.82 0 0);
-  --contrast-14: oklch(0.88 0 0);
-  --contrast-23: oklch(0.76 0 0);
-  --contrast-45: oklch(0.48 0 0);
-  --contrast-70: oklch(0.28 0 0);
+:root[data-mantine-color-scheme="light"] {
+  --mantine-color-body: #fcfbf8;
+  --mantine-color-text: #1c1b1a;
+  --report-surface: #fff;
+  --report-surface-alt: #f2f0ea;
+  --report-accent: #b65309;
+  --report-series-1: #0072b2;
+  --report-series-2: #c28400;
+  --report-series-3: #009464;
+  --report-series-4: #c15400;
+  --report-series-5: #349bcf;
+  --report-series-6: #c875a5;
+  --report-series-7: #9f933c;
+  --report-series-8: #939089;
+  --graph-frame: #dedcd7;
+  --graph-muted: #6e6c68;
+  --graph-faint: #e4e1d8;
+  --contrast-14: #eeeae2;
+  --contrast-23: #d4d0c7;
+  --contrast-45: #807c73;
+  --contrast-70: #45423c;
 }
-html[data-mantine-color-scheme="dark"] {
-  --graph-accent: oklch(0.7 0.12 255);
-  --graph-accent-2: oklch(0.78 0.12 70);
-  --graph-accent-3: oklch(0.78 0.1 165);
-  --graph-frame: oklch(0.48 0 0);
-  --graph-muted: oklch(0.6 0 0);
-  --graph-faint: oklch(0.28 0 0);
-  --contrast-14: oklch(0.22 0 0);
-  --contrast-23: oklch(0.34 0 0);
-  --contrast-45: oklch(0.62 0 0);
-  --contrast-70: oklch(0.84 0 0);
+:root[data-mantine-color-scheme="dark"] {
+  --mantine-color-body: #181a1e;
+  --mantine-color-text: #eeeef0;
+  --report-surface: #1d2025;
+  --report-surface-alt: #23262c;
+  --report-accent: #efa15c;
+  --report-series-1: #62b5e5;
+  --report-series-2: #e2b551;
+  --report-series-3: #55c99c;
+  --report-series-4: #ed9456;
+  --report-series-5: #80c9ec;
+  --report-series-6: #dfa1c4;
+  --report-series-7: #c1b76e;
+  --report-series-8: #b2aea5;
+  --graph-frame: #383c44;
+  --graph-muted: #a2a6af;
+  --graph-faint: #30343c;
+  --contrast-14: #292d34;
+  --contrast-23: #414650;
+  --contrast-45: #969ba5;
+  --contrast-70: #d2d5db;
+}
+.report-document {
+  max-width: 64rem;
+  font-family: var(--font-mono);
 }
 .report-document [data-frame] { margin: 1.75rem 0; }
 .report-document [data-frame] :where(p, ul, ol, blockquote, pre, table) { margin: 0; }
 .report-document [data-frame] :where(ul, ol) { padding: 0; list-style: none; }
 .report-document [data-frame] :where(blockquote, pre) { border: 0; padding: 0; background: none; }
 .report-document [data-frame] :where(th, td) { padding: 0; border: 0; }
-.report-document [data-frame] :where(button) { font: inherit; color: inherit; cursor: pointer; }
+.report-document .report-graph-title {
+  color: var(--graph-muted);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  white-space: normal;
+}
+.report-document .report-graph-title .graph-title-ink { color: inherit; }
+.report-document :is(.report-mdxcn-palette-duo, .report-mdxcn-palette-multi) {
+  --graph-accent: var(--report-series-1);
+}
+.report-document :is(.report-mdxcn-GraphTable, .report-mdxcn-GraphSheet, .report-mdxcn-GraphInvoice) {
+  border: 1px solid var(--graph-frame);
+  background: var(--report-surface);
+}
+.report-document :is(.report-mdxcn-GraphTable, .report-mdxcn-GraphSheet, .report-mdxcn-GraphInvoice) > .report-graph-title {
+  margin: 0;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--graph-frame);
+}
+.report-document :is(.report-mdxcn-GraphTable, .report-mdxcn-GraphSheet, .report-mdxcn-GraphInvoice) .graph-rule-y { display: none; }
+.report-document :is(.report-mdxcn-GraphTable, .report-mdxcn-GraphSheet, .report-mdxcn-GraphInvoice) thead th {
+  padding: 10px 12px;
+  color: var(--graph-muted);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.report-document .report-mdxcn-GraphTable tbody td { border-bottom: 1px solid var(--graph-frame); }
+.report-document .report-mdxcn-GraphTable tbody tr:nth-child(even) { background: color-mix(in srgb, var(--report-surface-alt) 50%, transparent); }
+.report-document .report-mdxcn-GraphTable tbody tr:last-child td { border-bottom: 0; }
+.report-document .report-mdxcn-GraphTable :is(thead, tfoot) [colspan] { padding: 0; }
+.report-document .report-mdxcn-GraphTable tfoot td:not([colspan]) { padding: 10px 12px; font-weight: 600; }
+.report-graph-corner {
+  position: absolute;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  color: var(--report-accent);
+  border-color: currentColor;
+  border-style: solid;
+  border-width: 0;
+  pointer-events: none;
+}
+.report-graph-corner--tl { top: -1px; left: -1px; border-top-width: 1px; border-left-width: 1px; }
+.report-graph-corner--tr { top: -1px; right: -1px; border-top-width: 1px; border-right-width: 1px; }
+.report-graph-corner--bl { bottom: -1px; left: -1px; border-bottom-width: 1px; border-left-width: 1px; }
+.report-graph-corner--br { bottom: -1px; right: -1px; border-bottom-width: 1px; border-right-width: 1px; }
+.report-graph-corner[data-custom="true"] { border: 0; }
+.report-section {
+  position: relative;
+  margin: 3rem 0;
+  border: 1px solid var(--graph-frame);
+  background: var(--report-surface);
+}
+.report-section::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  color: var(--report-accent);
+  background:
+    linear-gradient(currentColor, currentColor) top left / 14px 1px,
+    linear-gradient(currentColor, currentColor) top left / 1px 14px,
+    linear-gradient(currentColor, currentColor) top right / 14px 1px,
+    linear-gradient(currentColor, currentColor) top right / 1px 14px,
+    linear-gradient(currentColor, currentColor) bottom left / 14px 1px,
+    linear-gradient(currentColor, currentColor) bottom left / 1px 14px,
+    linear-gradient(currentColor, currentColor) bottom right / 14px 1px,
+    linear-gradient(currentColor, currentColor) bottom right / 1px 14px;
+  background-repeat: no-repeat;
+}
+.report-section-heading { padding: 20px 24px; border-bottom: 1px solid var(--graph-frame); }
+.report-section-label { margin-bottom: 8px; color: var(--report-accent); font-size: 0.68rem; letter-spacing: 0.1em; }
+.report-section-heading h2 { margin: 0; padding: 0; border: 0; font-size: 1.1rem; line-height: 1.45; }
+.report-section-heading p { margin: 8px 0 0; color: var(--graph-muted); font-size: 0.85rem; }
+.report-section-body { padding: 24px; }
+.report-section-body > :first-child { margin-top: 0; }
+.report-section-body > :last-child { margin-bottom: 0; }
+.report-section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 24px 0; }
+.report-section-grid .report-graph-title { color: var(--report-accent); }
+.report-section-grid > [data-frame] { margin: 0; padding: 20px; border: 1px solid var(--graph-frame); background: var(--report-surface-alt); }
+@media (max-width: 40rem) {
+  .report-section-heading { padding: 16px; }
+  .report-section-body { padding: 16px; }
+  .report-section-grid { grid-template-columns: minmax(0, 1fr); }
+}
 @media print {
   html[data-mantine-color-scheme] {
+    --report-surface: #fff;
+    --report-surface-alt: #f5f5f5;
+    --report-accent: #000;
     --graph-accent: #000;
     --graph-accent-2: #333;
     --graph-accent-3: #555;
@@ -48,4 +171,6 @@ html[data-mantine-color-scheme="dark"] {
     --graph-faint: #ddd;
   }
   .report-document [data-frame], .report-document [data-frame] * { opacity: 1 !important; transform: none !important; }
+  .report-section { break-inside: auto; }
+  .report-section-grid > [data-frame] { break-inside: avoid; }
 }

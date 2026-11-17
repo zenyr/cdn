@@ -71,12 +71,46 @@ All 46 mdxcn visual components, the frame primitives (including `GraphArrow` and
 `GraphFrameProvider`), and their data child tags are registered by default.
 Write the document once in `<script type="text/mdx">` and call `mountDocument` as
 usual; there is no separate fallback body to maintain. The
-[compatibility gallery](examples/mdxcn-test.html) contains 76 examples, including
+[compatibility gallery](examples/mdxcn-test.html) contains 76 compatibility examples and a grouped theme showcase, including
 all visual components, Korean text, Markdown tables, nested checklists, and tagged data.
 The gallery uses absolute jsDelivr URLs pinned to runtime commit
 `14a90fe4b2a2cd38ecb622e678dc07040a107fbb`, so the HTML file can be copied elsewhere.
 The browser tests intercept these CDN URLs with local build output; they do not
 require network access or use the published bundle in place of the code under test.
+
+The default presentation follows a restrained technical report style: unframed
+charts, quiet solid table rules, monospaced typography, and small orange accents.
+Light mode uses a warm off-white canvas. `palette="multi"` cycles through eight
+series colors; `palette="duo"` uses the first two. Data colors are separate from
+section accents, and dark mode uses lighter series variants.
+
+Use `ReportSection` for a major group with orange corner marks. Place related
+explanations in `ReportGrid`; it has two columns on wider screens and one on phones.
+Individual components stay unframed unless `frame="box"`, `frame="rule"`, or
+`frame="corners"` is authored or inherited from `GraphFrameProvider`.
+
+```mdx
+<ReportSection label="01 / DELIVERY" title="배포 현황">
+
+<GraphTable title="확인 결과">
+
+| 항목 | 상태 |
+| --- | --- |
+| 본문 | 준비 |
+| 차트 | 준비 |
+
+</GraphTable>
+
+<ReportGrid>
+
+<Callout title="01 / 작성">MDX 한 번만 작성합니다.</Callout>
+
+<Callout title="02 / 공유">HTML 파일로 전달합니다.</Callout>
+
+</ReportGrid>
+
+</ReportSection>
+```
 
 ```mdx
 <GraphTimeline title="배포 과정">

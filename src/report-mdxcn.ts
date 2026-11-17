@@ -28,7 +28,10 @@ const numericAttributes: Record<string, readonly string[]> = {
   GraphActivity: ["weekStartsOn"],
 };
 const normalizeProps = (name: string, props: Record<string, unknown>) => {
-  const normalized = { ...props };
+  const normalized: Record<string, unknown> = {
+    ...props,
+    className: [props.className, `report-mdxcn-${name}`, props.palette ? `report-mdxcn-palette-${props.palette}` : ""].filter(Boolean).join(" "),
+  };
   for (const key of numericAttributes[name] ?? []) {
     const value = normalized[key];
     if (typeof value === "string" && value.trim() && Number.isFinite(Number(value))) normalized[key] = Number(value);

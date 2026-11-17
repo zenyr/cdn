@@ -97,5 +97,5 @@ test("mdxcn renderer and shared imports stay pinned to emitted files", async () 
     }
   }
   expect(await read("dist/report-runtime.esm.js")).toContain("./report-mdxcn-renderer.esm.js");
-  expect(await read("dist/report-runtime.esm.css")).toContain("repeating-linear-gradient");
+  expect(await read("dist/report-runtime.esm.css")).toContain(".report-section");
 });

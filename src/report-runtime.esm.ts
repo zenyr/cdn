@@ -42,6 +42,7 @@ import "./report-runtime.css";
 import "./report-code.css";
 import "./report-mdxcn.css";
 import { isMdxcnItem, mdxcnComponents } from "./report-mdxcn";
+import { ReportGrid, ReportSection } from "./report-sections";
 import { highlightCode } from "./report-code";
 import { MermaidBlock } from "./report-mermaid";
 import {
@@ -309,7 +310,7 @@ const renderNode = (
   }
 };
 
-const defaultComponents: ComponentRegistry = { ...mdxcnComponents, ThemeToggle, SvgFigure, OssLicenseFooter };
+const defaultComponents: ComponentRegistry = { ...mdxcnComponents, ReportSection, ReportGrid, ThemeToggle, SvgFigure, OssLicenseFooter };
 const containsComponent = (node: MdxNode, name: string): boolean =>
   ((node.type === "mdxJsxFlowElement" || node.type === "mdxJsxTextElement") && node.name === name) ||
   (node.children?.some((child) => containsComponent(child, name)) ?? false);
