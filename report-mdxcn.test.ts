@@ -132,9 +132,10 @@ test("Korean multiline content keeps invoice insets, note alignment and fixed up
         const value = row.querySelector('.report-env-value')!.getBoundingClientRect();
         const note = row.querySelector('.report-env-note')!;
         const bounds = note.getBoundingClientRect();
-        return { sameStart: Math.abs(name.x - bounds.x) < 1, below: bounds.y >= Math.max(name.bottom, value.bottom), paragraphs: note.textContent?.includes('\n\n'), whitespace: getComputedStyle(note).whiteSpace, fits: bounds.right <= row.getBoundingClientRect().right + 1 };
+        const style = getComputedStyle(note);
+        return { indent: Math.round(bounds.x + parseFloat(style.paddingLeft) + parseFloat(style.borderLeftWidth) - name.x), border: style.borderLeftStyle, below: bounds.y >= Math.max(name.bottom, value.bottom), paragraphs: note.textContent?.includes('\n\n'), whitespace: getComputedStyle(note).whiteSpace, fits: bounds.right <= row.getBoundingClientRect().right + 1 };
       });
-      expect(notes).toEqual({ sameStart: true, below: true, paragraphs: true, whitespace: 'pre-line', fits: true });
+      expect(notes).toEqual({ indent: 17, border: 'solid', below: true, paragraphs: true, whitespace: 'pre-line', fits: true });
       for (const name of ['INVOICE 0041', 'QUOTE', 'K03 / 보고서 제작 내역']) {
         const invoice = page.getByRole('figure', { name, exact: true });
         expect(await invoice.locator('dd').evaluateAll(cells => cells.every(cell => getComputedStyle(cell).marginLeft === '0px'))).toBe(true);
@@ -148,7 +149,7 @@ test("Korean multiline content keeps invoice insets, note alignment and fixed up
         const aligned = await page.getByRole('figure', { name, exact: true }).locator('.report-env-row').first().evaluate(row => {
           const name = row.querySelector('.report-env-name')!.getBoundingClientRect();
           const note = row.querySelector('.report-env-note')!.getBoundingClientRect();
-          return Math.abs(name.x - note.x) < 1;
+          return Math.abs(note.x - name.x - 4) < 1;
         });
         expect(aligned).toBe(true);
       }

@@ -184,7 +184,15 @@
 .report-env-marker { grid-area: mark; }
 .report-env-name { grid-area: name; min-width: 0; overflow-wrap: anywhere; }
 .report-env-value { grid-area: value; min-width: 0; overflow-wrap: anywhere; }
-.report-env-note { grid-area: note; min-width: 0; white-space: pre-line; }
+.report-env-note {
+  grid-area: note;
+  min-width: 0;
+  margin: 4px 0 8px 4px;
+  padding-inline-start: 12px;
+  border-inline-start: 1px solid var(--graph-frame);
+  white-space: pre-line;
+  line-height: 1.65;
+}
 .report-document .report-uptime-cell { width: 1ch; min-width: 1ch; }
 .report-uptime-symbol {
   position: relative;
