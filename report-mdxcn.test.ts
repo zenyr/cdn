@@ -25,6 +25,13 @@ test("all mdxcn components render Markdown, tables and data children", async () 
     expect(await page.locator('[data-frame]').evaluateAll(figures => figures.every(figure => (figure.textContent?.trim().length ?? 0) > 5))).toBe(true);
     const tables = page.locator('[data-frame]').filter({ hasText: 'WHAT THE RESEARCH COST' });
     expect(await tables.innerText()).toContain('437,141');
+    expect(await tables.locator('tbody td').first().evaluate(element => {
+      const style = getComputedStyle(element);
+      return { left: style.paddingLeft, right: style.paddingRight, top: style.paddingTop, bottom: style.paddingBottom };
+    })).toEqual({ left: '12px', right: '12px', top: '10px', bottom: '10px' });
+    expect(await tables.locator('thead th').first().evaluate(element => getComputedStyle(element).paddingBottom)).toBe('12px');
+    expect(await tables.locator('tbody td').nth(1).evaluate(element => getComputedStyle(element).textAlign)).toBe('right');
+    expect(await tables.locator('table').evaluate(element => getComputedStyle(element).borderCollapse)).toBe('separate');
     expect(await page.locator('[data-frame]').filter({ hasText: '[ LAUNCH ]' }).first().innerText()).toContain('2 of 3 done');
     expect(await page.getByText('설정 확인', { exact: true }).count()).toBe(1);
     expect(await page.getByText('새 버전 적용', { exact: true }).count()).toBe(1);
